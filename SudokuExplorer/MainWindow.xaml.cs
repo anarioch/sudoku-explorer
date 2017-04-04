@@ -83,7 +83,7 @@ namespace WpfApplication1
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			Dictionary<int, int> candidates = EliminationSolver.soles2(Board);
+			Dictionary<int, int> candidates = EliminationSolver.soles(Board);
 			stopwatch.Stop();
 			foreach (KeyValuePair<int, int> pair in candidates)
 				Board[pair.Key].Value = pair.Value;

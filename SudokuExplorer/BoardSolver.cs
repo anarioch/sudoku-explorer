@@ -77,7 +77,6 @@ namespace WpfApplication1
 
 					int box = BoardMath.rowColToBox(row, col);
 					int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
-					//int[] array = intersect.ToArray();
 
 					if (intersect != 0 && (intersect & (intersect - 1)) == 0)
 						result.Add(new KeyValuePair<int, int>(ordinal, fromMask(intersect)));
@@ -87,218 +86,81 @@ namespace WpfApplication1
 			return result;
 		}
 
-		public static IEnumerable<KeyValuePair<int, int>> soles(SudokuBoard board)
-		{
-			List<KeyValuePair<int, int>> result = new List<KeyValuePair<int, int>>();
-
-			// Find the missing entries on each row/column/box
-			int[] rowCandidates = new int[9];
-			int[] colCandidates = new int[9];
-			int[] boxCandidates = new int[9];
-			for (int i = 0; i < 9; i++)
-			{
-				rowCandidates[i] = missingEntries(board.row(i));
-				colCandidates[i] = missingEntries(board.col(i));
-				boxCandidates[i] = missingEntries(board.box(i));
-			}
-
-			// Find the intersection of these at each cell
-			int[] cellCandidates = new int[81];
-			for (int row = 0; row < 9; row++)
-			{
-				for (int col = 0; col < 9; col++)
-				{
-					int ordinal = BoardMath.rowColToOrdinal(row, col);
-					if (board[ordinal].Value != 0)
-						continue;
-
-					int box = BoardMath.rowColToBox(row, col);
-					int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
-					cellCandidates[ordinal] = intersect;
-				}
-			}
-
-			// Count number of places that each rowCandidate can go within this row
-			for (int row = 0; row < 9; row++)
-			{
-				int thisLine = rowCandidates[row];
-				int[] candidateCount = new int[9]; // Not used yet, thinking of it for future solve
-				for (int candidate = 1; candidate < 10; candidate++)
-				{
-					if ((thisLine & (1 << candidate)) == 0)
-						continue;
-
-					int count = 0;
-					int lastOrdinal = -1;
-					for (int col = 0; col < 9; col++)
-					{
-						int ordinal = BoardMath.rowColToOrdinal(row, col);
-						int candidates = cellCandidates[ordinal];
-						if ((candidates & (1 << candidate)) != 0)
-						{
-							count++;
-							lastOrdinal = ordinal;
-						}
-					}
-					candidateCount[candidate - 1] = count;
-
-					if (count == 1)
-						result.Add(new KeyValuePair<int, int>(lastOrdinal, candidate));
-				}
-			}
-
-			// Count number of places that each rowCandidate can go within this row
-			for (int col = 0; col < 9; col++)
-			{
-				int thisLine = colCandidates[col];
-				int[] candidateCount = new int[9]; // Not used yet, thinking of it for future solve
-				for (int candidate = 1; candidate < 10; candidate++)
-				{
-					if ((thisLine & (1 << candidate)) == 0)
-						continue;
-
-					int count = 0;
-					int lastOrdinal = -1;
-					for (int row = 0; row < 9; row++)
-					{
-						int ordinal = BoardMath.rowColToOrdinal(row, col);
-						int candidates = cellCandidates[ordinal];
-						if ((candidates & (1 << candidate)) != 0)
-						{
-							count++;
-							lastOrdinal = ordinal;
-						}
-					}
-					candidateCount[candidate - 1] = count;
-
-					if (count == 1)
-						result.Add(new KeyValuePair<int, int>(lastOrdinal, candidate));
-				}
-			}
-
-			return result;
-		}
-
-		public static Dictionary<int, int> soles2(SudokuBoard board)
+		public static Dictionary<int, int> soles(SudokuBoard board)
 		{
 			Dictionary<int, int> result = new Dictionary<int, int>();
 
-			// Find the missing entries on each row/column/box
-			int[] rowCandidates = new int[9];
-			int[] colCandidates = new int[9];
-			int[] boxCandidates = new int[9];
-			for (int i = 0; i < 9; i++)
-			{
-				rowCandidates[i] = missingEntries(board.row(i));
-				colCandidates[i] = missingEntries(board.col(i));
-				boxCandidates[i] = missingEntries(board.box(i));
-			}
+            // Find the missing entries on each row/column/box
+            int[] rowCandidates = new int[9];
+            int[] colCandidates = new int[9];
+            int[] boxCandidates = new int[9];
+            for (int i = 0; i < 9; i++)
+            {
+                rowCandidates[i] = missingEntries(board.row(i));
+                colCandidates[i] = missingEntries(board.col(i));
+                boxCandidates[i] = missingEntries(board.box(i));
+            }
 
-			// Find the intersection of these at each cell
-			int[] cellCandidates = new int[81];
-			for (int row = 0; row < 9; row++)
-			{
-				for (int col = 0; col < 9; col++)
-				{
-					int ordinal = BoardMath.rowColToOrdinal(row, col);
-					if (board[ordinal].Value != 0)
-						continue;
+            // Find the intersection of these at each cell
+            int[] cellCandidates = new int[81];
+            for (int row = 0; row < 9; row++)
+            {
+                for (int col = 0; col < 9; col++)
+                {
+                    int ordinal = BoardMath.rowColToOrdinal(row, col);
+                    if (board[ordinal].Value != 0)
+                        continue;
 
-					int box = BoardMath.rowColToBox(row, col);
-					int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
-					cellCandidates[ordinal] = intersect;
-				}
-			}
+                    int box = BoardMath.rowColToBox(row, col);
+                    int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
+                    cellCandidates[ordinal] = intersect;
+                }
+            }
 
-			// Count number of places that each rowCandidate can go within this row
-			for (int row = 0; row < 9; row++)
-			{
-				int thisLine = rowCandidates[row];
-				int[] candidateCount = new int[9]; // Not used yet, thinking of it for future solve
-				for (int candidate = 1; candidate < 10; candidate++)
-				{
-					if ((thisLine & (1 << candidate)) == 0)
-						continue;
+            // Count number of places that each rowCandidate can go within this row
+            FindSolesInLine(rowCandidates, BoardMath.rowColToOrdinal, cellCandidates, result);
 
-					int count = 0;
-					int lastOrdinal = -1;
-					for (int col = 0; col < 9; col++)
-					{
-						int ordinal = BoardMath.rowColToOrdinal(row, col);
-						int candidates = cellCandidates[ordinal];
-						if ((candidates & (1 << candidate)) != 0)
-						{
-							count++;
-							lastOrdinal = ordinal;
-						}
-					}
-					candidateCount[candidate - 1] = count;
+            // Count number of places that each colCandidate can go within this col
+            FindSolesInLine(colCandidates, (col, row) => BoardMath.rowColToOrdinal(row, col), cellCandidates, result);
 
-					if (count == 1)
-						result[lastOrdinal] = candidate;
-				}
-			}
+            // Count number of places that each boxCandidate can go within this box
+            FindSolesInLine(boxCandidates, BoardMath.boxToOrdinal, cellCandidates, result);
 
-			// Count number of places that each colCandidate can go within this col
-			for (int col = 0; col < 9; col++)
-			{
-				int thisLine = colCandidates[col];
-				int[] candidateCount = new int[9]; // Not used yet, thinking of it for future solve
-				for (int candidate = 1; candidate < 10; candidate++)
-				{
-					if ((thisLine & (1 << candidate)) == 0)
-						continue;
+            return result;
+        }
 
-					int count = 0;
-					int lastOrdinal = -1;
-					for (int row = 0; row < 9; row++)
-					{
-						int ordinal = BoardMath.rowColToOrdinal(row, col);
-						int candidates = cellCandidates[ordinal];
-						if ((candidates & (1 << candidate)) != 0)
-						{
-							count++;
-							lastOrdinal = ordinal;
-						}
-					}
-					candidateCount[candidate - 1] = count;
+        private delegate int LineOrdinalMethod(int outer, int inner);
 
-					if (count == 1)
-						result[lastOrdinal] = candidate;
-				}
-			}
+        private static void FindSolesInLine(int[] lineCandidates, LineOrdinalMethod lineOrdinal, int[] cellCandidates, Dictionary<int, int> result)
+        {
+            for (int outer = 0; outer < 9; outer++)
+            {
+                int thisLine = lineCandidates[outer];
+                int[] candidateCount = new int[9]; // Not used yet, thinking of it for future solve
+                for (int candidate = 1; candidate < 10; candidate++)
+                {
+                    if ((thisLine & (1 << candidate)) == 0)
+                        continue;
 
-			// Count number of places that each colCandidate can go within this col
-			for (int box = 0; box < 9; box++)
-			{
-				int thisLine = boxCandidates[box];
-				int[] candidateCount = new int[9]; // Not used yet, thinking of it for future solve
-				for (int candidate = 1; candidate < 10; candidate++)
-				{
-					if ((thisLine & (1 << candidate)) == 0)
-						continue;
+                    int count = 0;
+                    int lastOrdinal = -1;
+                    for (int inner = 0; inner < 9; inner++)
+                    {
+                        int ordinal = lineOrdinal(outer, inner);
+                        int candidates = cellCandidates[ordinal];
+                        if ((candidates & (1 << candidate)) != 0)
+                        {
+                            count++;
+                            lastOrdinal = ordinal;
+                        }
+                    }
+                    candidateCount[candidate - 1] = count;
 
-					int count = 0;
-					int lastOrdinal = -1;
-					for (int index = 0; index < 9; index++)
-					{
-						int ordinal = BoardMath.boxToOrdinal(box, index);
-						int candidates = cellCandidates[ordinal];
-						if ((candidates & (1 << candidate)) != 0)
-						{
-							count++;
-							lastOrdinal = ordinal;
-						}
-					}
-					candidateCount[candidate - 1] = count;
-
-					if (count == 1)
-						result[lastOrdinal] = candidate;
-				}
-			}
-
-			return result;
-		}
-
-	}
+                    // If there was only one, then mark the position we saw as a solution for this candidate
+                    if (count == 1)
+                        result[lastOrdinal] = candidate;
+                }
+            }
+        }
+    }
 }

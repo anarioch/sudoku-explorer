@@ -54,7 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WpfApplication1\SudokuExplorer.csproj">
+    <ProjectReference Include="..\SudokuExplorer\SudokuExplorer.csproj">
       <Project>{bb1f7ee9-70af-49c6-b4c5-2b8b0540ec9c}</Project>
       <Name>SudokuExplorer</Name>
     </ProjectReference>
