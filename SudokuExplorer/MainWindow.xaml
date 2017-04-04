@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApplication1"
         mc:Ignorable="d"
-        Title="Sudoku Explorer" Height="500" Width="525"
+        Title="Sudoku Explorer" Height="540" Width="525"
         x:Name="me">
     <StackPanel Orientation="Vertical">
         <local:BoardControl x:Name="boardControl" DataContext="{Binding Path=Board}" />
@@ -22,7 +22,22 @@
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="eliminateButton_Click"/>
                 <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="solesButton_Click"/>
-                <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validator.IsValid, ElementName=me}" VerticalAlignment="Center" />
+                <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validator.IsValid, ElementName=me}" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="COMPLETE">
+                                    <Setter Property="Foreground" Value="Green" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="INVALID">
+                                    <Setter Property="Foreground" Value="Red" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Status">
