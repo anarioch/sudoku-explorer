@@ -49,17 +49,22 @@ namespace WpfApplication1
 
 		private void fillSequentialButton_Click(object sender, RoutedEventArgs e)
 		{
-			Board.fillSequential();
+			BoardFactory.fillSequential(Board);
 		}
 
 		private void fillStripedButton_Click(object sender, RoutedEventArgs e)
 		{
-			Board.fillStriped();
+			BoardFactory.fillStriped(Board);
 		}
 
 		private void fillSeedButton_Click(object sender, RoutedEventArgs e)
 		{
-			Board.fillSeed();
+			BoardFactory.fillSeed(Board);
+		}
+
+		private void fillSeed2Button_Click(object sender, RoutedEventArgs e)
+		{
+			BoardFactory.fillSeed2(Board);
 		}
 
 		private void clearButton_Click(object sender, RoutedEventArgs e)
