@@ -6,25 +6,25 @@ namespace WpfApplication1
 {
 	public class BoardMath
 	{
-		public static int rowColToOrdinal(int row, int col)
+		public static int RowColToOrdinal(int row, int col)
 		{
 			return 9 * row + col;
 		}
 
-		public static void ordinalToRowCol(int ordinal, out int row, out int col)
+		public static void OrdinalToRowCol(int ordinal, out int row, out int col)
 		{
 			row = ordinal / 9;
 			col = ordinal % 9;
 		}
 
-		public static int rowColToBox(int row, int col)
+		public static int RowColToBox(int row, int col)
 		{
 			int boxrow = row / 3;
 			int boxcol = col / 3;
 			return 3 * boxrow + boxcol;
 		}
 
-		public static int boxToOrdinal(int box, int index)
+		public static int BoxToOrdinal(int box, int index)
 		{
 			// Initial indices of each box
 			//    0   3   6
@@ -42,11 +42,11 @@ namespace WpfApplication1
 		}
 	}
 
-	public interface BoardLine
+	public interface IBoardLine
 	{
 		int this[int index] { get;  set; }
 	}
-	public class BoardRow : BoardLine
+	public class BoardRow : IBoardLine
 	{
 		private readonly SudokuBoard _board;
 		private readonly int _row;
@@ -57,12 +57,12 @@ namespace WpfApplication1
 		}
 		public int this[int col]
 		{
-			get { return _board.getCell(_row, col); }
-			set { _board.setCell(_row, col, value); }
+			get { return _board.GetCell(_row, col); }
+			set { _board.SetCell(_row, col, value); }
 		}
 	}
 
-	public class BoardCol : BoardLine
+	public class BoardCol : IBoardLine
 	{
 		private readonly SudokuBoard _board;
 		private readonly int _col;
@@ -73,12 +73,12 @@ namespace WpfApplication1
 		}
 		public int this[int row]
 		{
-			get { return _board.getCell(row, _col); }
-			set { _board.setCell(row, _col, value); }
+			get { return _board.GetCell(row, _col); }
+			set { _board.SetCell(row, _col, value); }
 		}
 	}
 
-	public class BoardBox : BoardLine
+	public class BoardBox : IBoardLine
 	{
 		private readonly SudokuBoard _board;
 		private readonly int _box;
@@ -89,8 +89,8 @@ namespace WpfApplication1
 		}
 		public int this[int index]
 		{
-			get { return _board[BoardMath.boxToOrdinal(_box, index)].Value; }
-			set { _board[BoardMath.boxToOrdinal(_box, index)].Value = value; }
+			get { return _board[BoardMath.BoxToOrdinal(_box, index)].Value; }
+			set { _board[BoardMath.BoxToOrdinal(_box, index)].Value = value; }
 		}
 	}
 
@@ -103,8 +103,7 @@ namespace WpfApplication1
 		// parameter causes the property name of the caller to be substituted as an argument.
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		private int _value = 0;
@@ -153,8 +152,7 @@ namespace WpfApplication1
 
 		private void NotifyBoardChanged()
 		{
-			if (BoardChanged != null)
-				BoardChanged(this);
+			BoardChanged?.Invoke(this);
 		}
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
@@ -183,37 +181,37 @@ namespace WpfApplication1
 			}
 		}
 
-		public BoardLine[] Rows
+		public IBoardLine[] Rows
 		{
 			get { return _rows; }
 		}
 
-		public BoardLine[] Cols
+		public IBoardLine[] Cols
 		{
 			get { return _cols; }
 		}
 
-		public BoardLine row(int row)
+		public IBoardLine Row(int row)
 		{
 			return _rows[row];
 		}
 
-		public BoardLine col(int col)
+		public IBoardLine Col(int col)
 		{
 			return _cols[col];
 		}
 
-		public BoardLine box(int box)
+		public IBoardLine Box(int box)
 		{
 			return new BoardBox(this, box);
 		}
 
-		public int getCell(int row, int col)
+		public int GetCell(int row, int col)
 		{
 			return this[9 * row + col].Value;
 		}
 
-		public void setCell(int row, int col, int value)
+		public void SetCell(int row, int col, int value)
 		{
 			this[9 * row + col].Value = value;
 		}
@@ -223,7 +221,7 @@ namespace WpfApplication1
 			get { return _data[index]; }
 		}
 
-		public void preset(int[] data)
+		public void Preset(int[] data)
 		{
 			for (int index = 0; index < 81; index++)
 			{
@@ -234,7 +232,7 @@ namespace WpfApplication1
 			}
 		}
 
-		public void clear()
+		public void Clear()
 		{
 			for (int index = 0; index < 81; index++)
 			{
@@ -247,26 +245,26 @@ namespace WpfApplication1
 
 	public class BoardFactory
 	{
-		public static void fillSequential(SudokuBoard board)
+		public static void FillSequential(SudokuBoard board)
 		{
-			board.clear();
+			board.Clear();
 			for (int row = 0; row < 9; row++)
 				for (int col = 0; col < 9; col++)
-					board.setCell(row, col, ((col + row) % 9) + 1);
+					board.SetCell(row, col, ((col + row) % 9) + 1);
 		}
 
-		public static void fillStriped(SudokuBoard board)
+		public static void FillStriped(SudokuBoard board)
 		{
-			board.clear();
+			board.Clear();
 			for (int row = 0; row < 9; row++)
 				for (int col = 0; col < 9; col++)
 				{
 					int rowOffset = 3 * (row % 3) + row / 3;
-					board.setCell(row, col, ((col + rowOffset) % 9) + 1);
+					board.SetCell(row, col, ((col + rowOffset) % 9) + 1);
 				}
 		}
 
-		public static void fillSeed(SudokuBoard board, int seed)
+		public static void FillSeed(SudokuBoard board, int seed)
 		{
 			if (seed == 0)
 			{
@@ -286,7 +284,7 @@ namespace WpfApplication1
 					9, 5, 0,  3, 2, 0,  0, 0, 0,
 				};
 
-				board.preset(data);
+				board.Preset(data);
 			}
 			else if (seed == 1)
 			{
@@ -306,7 +304,7 @@ namespace WpfApplication1
 					0, 0, 0,  0, 0, 0,  0, 0, 0,
 				};
 
-				board.preset(data);
+				board.Preset(data);
 			}
 			else if (seed == 1000)
 			{
@@ -326,7 +324,7 @@ namespace WpfApplication1
 					3, 0, 0,  4, 1, 0,  0, 0, 0,
 				};
 
-				board.preset(data);
+				board.Preset(data);
 			}
 			else if (seed == 1001)
 			{
@@ -346,7 +344,7 @@ namespace WpfApplication1
 					0, 0, 0,  3, 0, 0,  0, 0, 4,
 				};
 
-				board.preset(data);
+				board.Preset(data);
 			}
 		}
 	}

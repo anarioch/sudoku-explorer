@@ -47,38 +47,38 @@ namespace WpfApplication1
 		private BoardValidator _validator = new BoardValidator();
 		public BoardValidator Validator { get { return _validator; } }
 
-		private void fillSequentialButton_Click(object sender, RoutedEventArgs e)
+		private void FillSequentialButton_Click(object sender, RoutedEventArgs e)
 		{
-			BoardFactory.fillSequential(Board);
+			BoardFactory.FillSequential(Board);
 		}
 
-		private void fillStripedButton_Click(object sender, RoutedEventArgs e)
+		private void FillStripedButton_Click(object sender, RoutedEventArgs e)
 		{
-			BoardFactory.fillStriped(Board);
+			BoardFactory.FillStriped(Board);
 		}
 
-		private void fillSeedEasyButton_Click(object sender, RoutedEventArgs e)
-		{
-			int index = new Random().Next() % 2;
-			BoardFactory.fillSeed(Board, index);
-		}
-
-		private void fillSeedMediumButton_Click(object sender, RoutedEventArgs e)
+		private void FillSeedEasyButton_Click(object sender, RoutedEventArgs e)
 		{
 			int index = new Random().Next() % 2;
-			BoardFactory.fillSeed(Board, 1000 + index);
+			BoardFactory.FillSeed(Board, index);
 		}
 
-		private void clearButton_Click(object sender, RoutedEventArgs e)
+		private void FillSeedMediumButton_Click(object sender, RoutedEventArgs e)
 		{
-			Board.clear();
+			int index = new Random().Next() % 2;
+			BoardFactory.FillSeed(Board, 1000 + index);
 		}
 
-		private void eliminateButton_Click(object sender, RoutedEventArgs e)
+		private void ClearButton_Click(object sender, RoutedEventArgs e)
+		{
+			Board.Clear();
+		}
+
+		private void EliminateButton_Click(object sender, RoutedEventArgs e)
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.eliminate(Board);
+			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.Eliminate(Board);
 			stopwatch.Stop();
 			foreach (KeyValuePair<int, int> pair in candidates)
 				Board[pair.Key].Value = pair.Value;
@@ -86,11 +86,11 @@ namespace WpfApplication1
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
 
-		private void solesButton_Click(object sender, RoutedEventArgs e)
+		private void SolesButton_Click(object sender, RoutedEventArgs e)
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			Dictionary<int, int> candidates = EliminationSolver.soles(Board);
+			Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
 			stopwatch.Stop();
 			foreach (KeyValuePair<int, int> pair in candidates)
 				Board[pair.Key].Value = pair.Value;

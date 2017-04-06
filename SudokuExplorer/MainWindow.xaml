@@ -12,17 +12,17 @@
         <GroupBox>
             <GroupBox.Header>Fill</GroupBox.Header>
             <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top" >
-                <Button x:Name="clearButton" Content="Clear" Margin="10,10" Width="75" Click="clearButton_Click"/>
-                <Button x:Name="fillSequentialButton" Content="Sequential" Margin="10,10" Width="75" Click="fillSequentialButton_Click"/>
-                <Button x:Name="fillStripedButton" Content="Striped" Margin="10,10" Grid.Row="1" Width="75" Click="fillStripedButton_Click"/>
-                <Button x:Name="fillSeedEasyButton" Content="Easy" Margin="10,10" Grid.Row="1" Width="75" Click="fillSeedEasyButton_Click"/>
-                <Button x:Name="fillSeedMediumButton" Content="Medium" Margin="10,10" Grid.Row="1" Width="75" Click="fillSeedMediumButton_Click"/>
+                <Button x:Name="clearButton" Content="Clear" Margin="10,10" Width="75" Click="ClearButton_Click"/>
+                <Button x:Name="fillSequentialButton" Content="Sequential" Margin="10,10" Width="75" Click="FillSequentialButton_Click"/>
+                <Button x:Name="fillStripedButton" Content="Striped" Margin="10,10" Grid.Row="1" Width="75" Click="FillStripedButton_Click"/>
+                <Button x:Name="fillSeedEasyButton" Content="Easy" Margin="10,10" Grid.Row="1" Width="75" Click="FillSeedEasyButton_Click"/>
+                <Button x:Name="fillSeedMediumButton" Content="Medium" Margin="10,10" Grid.Row="1" Width="75" Click="FillSeedMediumButton_Click"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Solve">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="eliminateButton_Click"/>
-                <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="solesButton_Click"/>
+                <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="EliminateButton_Click"/>
+                <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="SolesButton_Click"/>
                 <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validator.IsValid, ElementName=me}" VerticalAlignment="Center">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">

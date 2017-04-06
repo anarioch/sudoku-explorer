@@ -12,7 +12,7 @@ namespace SudokuTests
 		{
 			SudokuBoard board = new SudokuBoard();
 
-			board.fillSequential();
+			BoardFactory.FillSequential(board);
 
 			Assert.AreEqual(1, board.Rows[0][0]);
 			Assert.AreEqual(2, board.Rows[1][0]);
@@ -24,7 +24,7 @@ namespace SudokuTests
 		{
 			SudokuBoard board = new SudokuBoard();
 
-			board.fillSequential();
+			BoardFactory.FillSequential(board);
 
 			Assert.AreEqual(1, board.Rows[0][0]);
 			Assert.AreEqual(2, board.Rows[1][0]);
@@ -35,19 +35,19 @@ namespace SudokuTests
 		public void TestValidate()
 		{
 			SudokuBoard board = new SudokuBoard();
-			Validity valid1 = BoardValidation.validate(board);
+			Validity valid1 = BoardValidation.Validate(board);
 			Assert.AreEqual(Validity.CONSISTENT, valid1);
 
-			board.fillSequential();
-			Validity valid2 = BoardValidation.validate(board);
+			BoardFactory.FillSequential(board);
+			Validity valid2 = BoardValidation.Validate(board);
 			Assert.AreEqual(Validity.INCONSISTENT, valid2);
 
-			board.fillStriped();
-			Validity valid3 = BoardValidation.validate(board);
+			BoardFactory.FillStriped(board);
+			Validity valid3 = BoardValidation.Validate(board);
 			Assert.AreEqual(Validity.COMPLETE, valid3);
 
 			board[3].Value = 15;
-			Validity valid4 = BoardValidation.validate(board);
+			Validity valid4 = BoardValidation.Validate(board);
 			Assert.AreEqual(Validity.INVALID, valid4);
 		}
 	}

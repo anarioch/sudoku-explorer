@@ -26,8 +26,7 @@ namespace WpfApplication1
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			int result = 0;
-			bool success = int.TryParse((string)value, out result);
+			bool success = int.TryParse((string)value, out int result);
 			return result;
 		}
 	}
@@ -45,7 +44,7 @@ namespace WpfApplication1
 			InitializeComponent();
 		}
 
-		private static int fudge(int line, int incr)
+		private static int Fudge(int line, int incr)
 		{
 			int newline = line + incr;
 			if (newline == 3 || newline == 7)
@@ -53,7 +52,7 @@ namespace WpfApplication1
 			return newline < 0 ? 0 : newline > 10 ? 10 : newline;
 		}
 
-		private void onCellKeyDown(object sender, KeyEventArgs e)
+		private void OnCellKeyDown(object sender, KeyEventArgs e)
 		{
 			if (sender is TextBox)
 			{
@@ -64,13 +63,13 @@ namespace WpfApplication1
 				int newRow = row;
 				int newCol = col;
 				if (e.Key == Key.Left)
-					newCol = fudge(col, -1);
+					newCol = Fudge(col, -1);
 				else if (e.Key == Key.Right)
-					newCol = fudge(col, 1);
+					newCol = Fudge(col, 1);
 				else if (e.Key == Key.Up)
-					newRow = fudge(row, -1);
+					newRow = Fudge(row, -1);
 				else if (e.Key == Key.Down)
-					newRow = fudge(row, 1);
+					newRow = Fudge(row, 1);
 
 				if (newRow != row || newCol != col)
 				{

@@ -28,7 +28,7 @@ namespace WpfApplication1
 		//	NotifyPropertyChanged("IsValid");
 		//}
 
-		private static int missingEntries(BoardLine line)
+		private static int MissingEntries(IBoardLine line)
 		{
 			int result = 0;
 			for (int c = 1; c < 10; c++)
@@ -43,7 +43,7 @@ namespace WpfApplication1
 			return result;
 		}
 
-		private static int fromMask(int mask)
+		private static int FromMask(int mask)
 		{
 			for (int i = 1; i < 10; i++)
 				if (mask == (1 << i))
@@ -51,7 +51,7 @@ namespace WpfApplication1
 			return 0;
 		}
 
-		public static IEnumerable<KeyValuePair<int, int>> eliminate(SudokuBoard board)
+		public static IEnumerable<KeyValuePair<int, int>> Eliminate(SudokuBoard board)
 		{
 			List<KeyValuePair<int, int>> result = new List<KeyValuePair<int, int>>();
 
@@ -61,9 +61,9 @@ namespace WpfApplication1
 			int[] boxCandidates = new int[9];
 			for (int i = 0; i < 9; i++)
 			{
-				rowCandidates[i] = missingEntries(board.row(i));
-				colCandidates[i] = missingEntries(board.col(i));
-				boxCandidates[i] = missingEntries(board.box(i));
+				rowCandidates[i] = MissingEntries(board.Row(i));
+				colCandidates[i] = MissingEntries(board.Col(i));
+				boxCandidates[i] = MissingEntries(board.Box(i));
 			}
 
 			// Find the intersection of these at each cell
@@ -71,22 +71,22 @@ namespace WpfApplication1
 			{
 				for (int col = 0; col < 9; col++)
 				{
-					int ordinal = BoardMath.rowColToOrdinal(row, col);
+					int ordinal = BoardMath.RowColToOrdinal(row, col);
 					if (board[ordinal].Value != 0)
 						continue;
 
-					int box = BoardMath.rowColToBox(row, col);
+					int box = BoardMath.RowColToBox(row, col);
 					int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
 
 					if (intersect != 0 && (intersect & (intersect - 1)) == 0)
-						result.Add(new KeyValuePair<int, int>(ordinal, fromMask(intersect)));
+						result.Add(new KeyValuePair<int, int>(ordinal, FromMask(intersect)));
 				}
 			}
 
 			return result;
 		}
 
-		public static Dictionary<int, int> soles(SudokuBoard board)
+		public static Dictionary<int, int> Soles(SudokuBoard board)
 		{
 			Dictionary<int, int> result = new Dictionary<int, int>();
 
@@ -96,9 +96,9 @@ namespace WpfApplication1
             int[] boxCandidates = new int[9];
             for (int i = 0; i < 9; i++)
             {
-                rowCandidates[i] = missingEntries(board.row(i));
-                colCandidates[i] = missingEntries(board.col(i));
-                boxCandidates[i] = missingEntries(board.box(i));
+                rowCandidates[i] = MissingEntries(board.Row(i));
+                colCandidates[i] = MissingEntries(board.Col(i));
+                boxCandidates[i] = MissingEntries(board.Box(i));
             }
 
             // Find the intersection of these at each cell
@@ -107,24 +107,24 @@ namespace WpfApplication1
             {
                 for (int col = 0; col < 9; col++)
                 {
-                    int ordinal = BoardMath.rowColToOrdinal(row, col);
+                    int ordinal = BoardMath.RowColToOrdinal(row, col);
                     if (board[ordinal].Value != 0)
                         continue;
 
-                    int box = BoardMath.rowColToBox(row, col);
+                    int box = BoardMath.RowColToBox(row, col);
                     int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
                     cellCandidates[ordinal] = intersect;
                 }
             }
 
             // Count number of places that each rowCandidate can go within this row
-            FindSolesInLine(rowCandidates, BoardMath.rowColToOrdinal, cellCandidates, result);
+            FindSolesInLine(rowCandidates, BoardMath.RowColToOrdinal, cellCandidates, result);
 
             // Count number of places that each colCandidate can go within this col
-            FindSolesInLine(colCandidates, (col, row) => BoardMath.rowColToOrdinal(row, col), cellCandidates, result);
+            FindSolesInLine(colCandidates, (col, row) => BoardMath.RowColToOrdinal(row, col), cellCandidates, result);
 
             // Count number of places that each boxCandidate can go within this box
-            FindSolesInLine(boxCandidates, BoardMath.boxToOrdinal, cellCandidates, result);
+            FindSolesInLine(boxCandidates, BoardMath.BoxToOrdinal, cellCandidates, result);
 
             return result;
         }

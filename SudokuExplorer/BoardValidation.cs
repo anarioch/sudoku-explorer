@@ -18,7 +18,7 @@ namespace WpfApplication1
 
 	public class BoardValidation
 	{
-		private static Validity validateLine(BoardLine line)
+		private static Validity ValidateLine(IBoardLine line)
 		{
 			Validity result = Validity.COMPLETE;
 			for (int i = 0; i < 9; i++)
@@ -41,19 +41,19 @@ namespace WpfApplication1
 			return result;
 		}
 
-		public static Validity validate(SudokuBoard board)
+		public static Validity Validate(SudokuBoard board)
 		{
 			Validity result = Validity.COMPLETE;
 			for (int i = 0; i < 9; i++)
 			{
 				// Check the ith row is consistent
-				Validity rowResult = validateLine(board.row(i));
+				Validity rowResult = ValidateLine(board.Row(i));
 
 				// Check the ith column
-				Validity colResult = validateLine(board.col(i));
+				Validity colResult = ValidateLine(board.Col(i));
 
 				// Check the ith box
-				Validity boxResult = validateLine(board.box(i));
+				Validity boxResult = ValidateLine(board.Box(i));
 
 				// Bail out if any INVALID was found
 				if (rowResult == Validity.INVALID || colResult == Validity.INVALID || boxResult == Validity.INVALID)
@@ -80,10 +80,7 @@ namespace WpfApplication1
 		// parameter causes the property name of the caller to be substituted as an argument.
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		private SudokuBoard _board;
@@ -93,10 +90,10 @@ namespace WpfApplication1
 			set
 			{
 				if (_board != null)
-					_board.BoardChanged -= onBoardChanged;
+					_board.BoardChanged -= OnBoardChanged;
 				_board = value;
 				if (_board != null)
-					_board.BoardChanged += onBoardChanged;
+					_board.BoardChanged += OnBoardChanged;
 			}
 		}
 
@@ -106,9 +103,9 @@ namespace WpfApplication1
 			get { return _isValid; }
 		}
 
-		private void onBoardChanged(SudokuBoard sender)
+		private void OnBoardChanged(SudokuBoard sender)
 		{
-			Validity isValid = BoardValidation.validate(Board);
+			Validity isValid = BoardValidation.Validate(Board);
 			if (isValid != _isValid)
 			{
 				_isValid = isValid;
