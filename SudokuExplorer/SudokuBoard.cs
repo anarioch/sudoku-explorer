@@ -223,11 +223,15 @@ namespace WpfApplication1
 			get { return _data[index]; }
 		}
 
-		public void preset(int index, int value)
+		public void preset(int[] data)
 		{
-			BoardCell cell = this[index];
-			cell.Value = value;
-			cell.IsPreset = true;
+			for (int index = 0; index < 81; index++)
+			{
+				BoardCell cell = this[index];
+				cell.IsPreset = false;
+				cell.Value = data[index];
+				cell.IsPreset = (data[index] != 0);
+			}
 		}
 
 		public void clear()
@@ -262,105 +266,88 @@ namespace WpfApplication1
 				}
 		}
 
-		public static void fillSeed(SudokuBoard board)
+		public static void fillSeed(SudokuBoard board, int seed)
 		{
-			board.clear();
+			if (seed == 0)
+			{
+				// http://www.websudoku.com/?level=1&set_id=301385430
+				int[] data =
+				{
+					0, 0, 0,  0, 5, 4,  0, 7, 3,
+					0, 0, 0,  0, 0, 2,  0, 0, 9,
+					0, 0, 0,  1, 8, 0,  5, 0, 0,
 
-			// http://www.websudoku.com/?level=1&set_id=301385430
-			board.preset(4, 5);
-			board.preset(5, 4);
-			board.preset(7, 7);
-			board.preset(8, 3);
+					1, 0, 7,  0, 9, 0,  4, 0, 6,
+					8, 4, 0,  0, 6, 0,  0, 1, 7,
+					5, 0, 6,  0, 1, 0,  3, 0, 8,
 
-			board.preset(14, 2);
-			board.preset(17, 9);
+					0, 0, 2,  0, 7, 9,  0, 0, 0,
+					7, 0, 0,  6, 0, 0,  0, 0, 0,
+					9, 5, 0,  3, 2, 0,  0, 0, 0,
+				};
 
-			board.preset(21, 1);
-			board.preset(22, 8);
-			board.preset(24, 5);
+				board.preset(data);
+			}
+			else if (seed == 1)
+			{
+				// http://www.websudoku.com/?level=1&set_id=1206243121
+				int[] data =
+				{
+					0, 0, 0,  0, 0, 0,  0, 0, 0,
+					9, 0, 0,  0, 0, 4,  0, 2, 8,
+					5, 6, 8,  0, 0, 2,  4, 3, 1,
 
-			board.preset(27, 1);
-			board.preset(29, 7);
-			board.preset(31, 9);
-			board.preset(33, 4);
-			board.preset(35, 6);
+					6, 5, 0,  0, 0, 7,  8, 0, 2,
+					0, 7, 0,  8, 0, 1,  0, 4, 0,
+					4, 0, 1,  3, 0, 0,  0, 5, 7,
 
-			board.preset(36, 8);
-			board.preset(37, 4);
-			board.preset(40, 6);
-			board.preset(43, 1);
-			board.preset(44, 7);
+					1, 2, 5,  7, 0, 0,  3, 9, 4,
+					7, 9, 0,  2, 0, 0,  0, 0, 5,
+					0, 0, 0,  0, 0, 0,  0, 0, 0,
+				};
 
-			board.preset(45, 5);
-			board.preset(47, 6);
-			board.preset(49, 1);
-			board.preset(51, 3);
-			board.preset(53, 8);
+				board.preset(data);
+			}
+			else if (seed == 1000)
+			{
+				// http://www.websudoku.com/?level=2&set_id=9247042447
+				int[] data =
+				{
+					0, 0, 0,  0, 7, 5,  0, 0, 4,
+					0, 9, 0,  8, 0, 0,  0, 7, 0,
+					4, 0, 1,  6, 0, 0,  5, 0, 0,
 
-			board.preset(56, 2);
-			board.preset(58, 7);
-			board.preset(59, 9);
+					0, 0, 9,  5, 0, 0,  0, 0, 6,
+					5, 0, 0,  0, 3, 0,  0, 0, 1,
+					1, 0, 0,  0, 0, 7,  9, 0, 0,
 
-			board.preset(63, 7);
-			board.preset(66, 6);
+					0, 0, 6,  0, 0, 8,  4, 0, 9,
+					0, 4, 0,  0, 0, 2,  0, 1, 0,
+					3, 0, 0,  4, 1, 0,  0, 0, 0,
+				};
 
-			board.preset(72, 9);
-			board.preset(73, 5);
-			board.preset(75, 3);
-			board.preset(76, 2);
+				board.preset(data);
+			}
+			else if (seed == 1001)
+			{
+				// http://www.websudoku.com/?level=2&set_id=6580048890
+				int[] data =
+				{
+					6, 0, 0,  0, 0, 3,  0, 0, 0,
+					3, 9, 0,  0, 5, 0,  0, 4, 0,
+					0, 8, 5,  0, 7, 0,  0, 0, 0,
 
-			//NotifyPropertyChanged("Item[]");
-		}
+					0, 0, 0,  9, 0, 0,  1, 3, 5,
+					0, 0, 0,  6, 2, 5,  0, 0, 0,
+					5, 4, 7,  0, 0, 1,  0, 0, 0,
 
-		public static void fillSeed2(SudokuBoard board)
-		{
-			board.clear();
+					0, 0, 0,  0, 6, 0,  5, 1, 0,
+					0, 3, 0,  0, 8, 0,  0, 7, 9,
+					0, 0, 0,  3, 0, 0,  0, 0, 4,
+				};
 
-			// http://www.websudoku.com/?level=1&set_id=1206243121
-			board.preset(9,  9);
-			board.preset(14, 4);
-			board.preset(16, 2);
-			board.preset(17, 8);
-
-			board.preset(18, 5);
-			board.preset(19, 6);
-			board.preset(20, 8);
-			board.preset(23, 2);
-			board.preset(24, 4);
-			board.preset(25, 3);
-			board.preset(26, 1);
-
-			board.preset(27, 6);
-			board.preset(28, 5);
-			board.preset(32, 7);
-			board.preset(33, 8);
-			board.preset(35, 2);
-
-			board.preset(37, 7);
-			board.preset(39, 8);
-			board.preset(41, 1);
-			board.preset(43, 4);
-
-			board.preset(45, 4);
-			board.preset(47, 1);
-			board.preset(48, 3);
-			board.preset(52, 5);
-			board.preset(53, 7);
-
-			board.preset(54, 1);
-			board.preset(55, 2);
-			board.preset(56, 5);
-			board.preset(57, 7);
-			board.preset(60, 3);
-			board.preset(61, 9);
-			board.preset(62, 4);
-
-			board.preset(63, 7);
-			board.preset(64, 9);
-			board.preset(66, 2);
-			board.preset(71, 5);
-
-			//NotifyPropertyChanged("Item[]");
+				board.preset(data);
+			}
 		}
 	}
 }

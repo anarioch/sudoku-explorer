@@ -15,8 +15,8 @@
                 <Button x:Name="clearButton" Content="Clear" Margin="10,10" Width="75" Click="clearButton_Click"/>
                 <Button x:Name="fillSequentialButton" Content="Sequential" Margin="10,10" Width="75" Click="fillSequentialButton_Click"/>
                 <Button x:Name="fillStripedButton" Content="Striped" Margin="10,10" Grid.Row="1" Width="75" Click="fillStripedButton_Click"/>
-                <Button x:Name="fillSeedButton" Content="Seed" Margin="10,10" Grid.Row="1" Width="75" Click="fillSeedButton_Click"/>
-                <Button x:Name="fillSeed2Button" Content="Seed 2" Margin="10,10" Grid.Row="1" Width="75" Click="fillSeed2Button_Click"/>
+                <Button x:Name="fillSeedEasyButton" Content="Easy" Margin="10,10" Grid.Row="1" Width="75" Click="fillSeedEasyButton_Click"/>
+                <Button x:Name="fillSeedMediumButton" Content="Medium" Margin="10,10" Grid.Row="1" Width="75" Click="fillSeedMediumButton_Click"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Solve">
