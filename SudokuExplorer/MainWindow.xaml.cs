@@ -57,16 +57,26 @@ namespace WpfApplication1
 			BoardFactory.FillStriped(Board);
 		}
 
+		private int _fillSeed = 0;
+
 		private void FillSeedEasyButton_Click(object sender, RoutedEventArgs e)
 		{
-			int index = new Random().Next() % 2;
-			BoardFactory.FillSeed(Board, index);
+			BoardFactory.FillSeed(Board, 0, _fillSeed++);
 		}
 
 		private void FillSeedMediumButton_Click(object sender, RoutedEventArgs e)
 		{
-			int index = new Random().Next() % 2;
-			BoardFactory.FillSeed(Board, 1000 + index);
+			BoardFactory.FillSeed(Board, 1, _fillSeed++);
+		}
+
+		private void FillSeedHardButton_Click(object sender, RoutedEventArgs e)
+		{
+			BoardFactory.FillSeed(Board, 2, _fillSeed++);
+		}
+
+		private void FillSeedEvilButton_Click(object sender, RoutedEventArgs e)
+		{
+			BoardFactory.FillSeed(Board, 3, _fillSeed++);
 		}
 
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
