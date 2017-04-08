@@ -51,9 +51,9 @@ namespace SudokuExplorer
 			return 0;
 		}
 
-		public static IEnumerable<KeyValuePair<int, int>> Eliminate(SudokuBoard board)
+		public static Dictionary<int, int> Eliminate(SudokuBoard board)
 		{
-			List<KeyValuePair<int, int>> result = new List<KeyValuePair<int, int>>();
+			Dictionary<int, int> result = new Dictionary<int, int>();
 
 			// Find the missing entries on each row/column/box
 			int[] rowCandidates = new int[9];
@@ -79,7 +79,7 @@ namespace SudokuExplorer
 					int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
 
 					if (intersect != 0 && (intersect & (intersect - 1)) == 0)
-						result.Add(new KeyValuePair<int, int>(ordinal, FromMask(intersect)));
+						result[ordinal] = FromMask(intersect);
 				}
 			}
 
