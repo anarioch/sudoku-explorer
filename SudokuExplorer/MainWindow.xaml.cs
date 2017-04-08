@@ -107,5 +107,31 @@ namespace SudokuExplorer
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
+
+		private void SolveButton_Click(object sender, RoutedEventArgs e)
+		{
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			bool foundCandidates = false;
+			int iterations = 0;
+			do
+			{
+				Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
+				foreach (KeyValuePair<int, int> pair in candidates)
+					Board[pair.Key].Value = pair.Value;
+				bool foundSolesCandidates = candidates.Count != 0;
+
+				IEnumerable<KeyValuePair<int, int>> eliminationCandidates = EliminationSolver.Eliminate(Board);
+				foreach (KeyValuePair<int, int> pair in eliminationCandidates)
+					Board[pair.Key].Value = pair.Value;
+				bool foundEliminationCandidates = eliminationCandidates.Count() != 0;
+
+				foundCandidates = foundSolesCandidates || foundEliminationCandidates;
+				iterations++;
+			} while (foundCandidates);
+			stopwatch.Stop();
+
+			statusText.Text = String.Format("Ran {0} iterations in {1}ms", iterations, stopwatch.ElapsedMilliseconds);
+		}
 	}
 }

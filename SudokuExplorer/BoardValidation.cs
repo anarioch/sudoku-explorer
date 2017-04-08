@@ -94,6 +94,7 @@ namespace SudokuExplorer
 				_board = value;
 				if (_board != null)
 					_board.BoardChanged += OnBoardChanged;
+				OnBoardChanged(_board);
 			}
 		}
 
@@ -101,16 +102,19 @@ namespace SudokuExplorer
 		public Validity IsValid
 		{
 			get { return _isValid; }
+			private set
+			{
+				if (value != _isValid)
+				{
+					_isValid = value;
+					NotifyPropertyChanged("IsValid");
+				}
+			}
 		}
 
 		private void OnBoardChanged(SudokuBoard sender)
 		{
-			Validity isValid = BoardValidation.Validate(Board);
-			if (isValid != _isValid)
-			{
-				_isValid = isValid;
-				NotifyPropertyChanged("IsValid");
-			}
+			IsValid = BoardValidation.Validate(Board);
 		}
 	}
 }
