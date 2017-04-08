@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WpfApplication1
+namespace SudokuExplorer
 {
 	public class BoardMath
 	{

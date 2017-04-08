@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WpfApplication1;
+using SudokuExplorer;
 
 namespace SudokuTests
 {
