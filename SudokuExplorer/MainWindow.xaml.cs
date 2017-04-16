@@ -91,7 +91,7 @@ namespace SudokuExplorer
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.Eliminate(Board);
+			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.Solve(Board, true, false);
 			stopwatch.Stop();
 
 			// Apply the solutions (pausing UI updates until the end)
@@ -107,7 +107,7 @@ namespace SudokuExplorer
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
+			Dictionary<int, int> candidates = EliminationSolver.Solve(Board, false, true);
 			stopwatch.Stop();
 
 			// Apply the solutions (pausing UI updates until the end)
@@ -130,20 +130,13 @@ namespace SudokuExplorer
 			int iterations = 0;
 			do
 			{
-				// Try looking for sole location candidates
-				Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
+				// Try looking for candidates
+				Dictionary<int, int> candidates = EliminationSolver.Solve(Board, true, true);
 				foreach (KeyValuePair<int, int> pair in candidates)
 					Board[pair.Key] = pair.Value;
-				bool foundSolesCandidates = candidates.Count != 0;
-
-				// Try pure elimination
-				candidates = EliminationSolver.Eliminate(Board);
-				foreach (KeyValuePair<int, int> pair in candidates)
-					Board[pair.Key] = pair.Value;
-				bool foundEliminationCandidates = candidates.Count != 0;
 
 				// Repeat until nothing is found
-				foundCandidates = foundSolesCandidates || foundEliminationCandidates;
+				foundCandidates = candidates.Count != 0;
 				iterations++;
 			} while (foundCandidates);
 			stopwatch.Stop();
