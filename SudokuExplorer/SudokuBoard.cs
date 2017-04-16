@@ -68,11 +68,25 @@ namespace SudokuExplorer
 		private BoardCol[] _cols;
 		private BoardBox[] _boxes;
 
+		private bool _suppressChangeEvents = false;
+
 		public event BoardChangedEventHandler BoardChanged;
 
 		private void NotifyBoardChanged()
 		{
-			BoardChanged?.Invoke(this);
+			if (!_suppressChangeEvents)
+				BoardChanged?.Invoke(this);
+		}
+
+		public void SuppressChangeEvents()
+		{
+			_suppressChangeEvents = true;
+		}
+
+		public void ResumeChangeEvents()
+		{
+			_suppressChangeEvents = false;
+			NotifyBoardChanged();
 		}
 
 		public SudokuBoard()

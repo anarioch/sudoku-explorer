@@ -93,8 +93,12 @@ namespace SudokuExplorer
 			stopwatch.Start();
 			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.Eliminate(Board);
 			stopwatch.Stop();
+
+			// Apply the solutions (pausing UI updates until the end)
+			Board.SuppressChangeEvents();
 			foreach (KeyValuePair<int, int> pair in candidates)
 				Board[pair.Key] = pair.Value;
+			Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
@@ -105,34 +109,46 @@ namespace SudokuExplorer
 			stopwatch.Start();
 			Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
 			stopwatch.Stop();
+
+			// Apply the solutions (pausing UI updates until the end)
+			Board.SuppressChangeEvents();
 			foreach (KeyValuePair<int, int> pair in candidates)
 				Board[pair.Key] = pair.Value;
+			Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
 
 		private void SolveButton_Click(object sender, RoutedEventArgs e)
 		{
+			// We do not need the UI to keep updating while doing the solve
+			Board.SuppressChangeEvents();
+
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
 			bool foundCandidates = false;
 			int iterations = 0;
 			do
 			{
+				// Try looking for sole location candidates
 				Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
 				foreach (KeyValuePair<int, int> pair in candidates)
 					Board[pair.Key] = pair.Value;
 				bool foundSolesCandidates = candidates.Count != 0;
 
+				// Try pure elimination
 				candidates = EliminationSolver.Eliminate(Board);
 				foreach (KeyValuePair<int, int> pair in candidates)
 					Board[pair.Key] = pair.Value;
 				bool foundEliminationCandidates = candidates.Count != 0;
 
+				// Repeat until nothing is found
 				foundCandidates = foundSolesCandidates || foundEliminationCandidates;
 				iterations++;
 			} while (foundCandidates);
 			stopwatch.Stop();
+
+			Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Ran {0} iterations in {1}ms", iterations, stopwatch.ElapsedMilliseconds);
 		}

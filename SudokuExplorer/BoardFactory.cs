@@ -4,14 +4,17 @@
 	{
 		public static void FillSequential(SudokuBoard board)
 		{
+			board.SuppressChangeEvents();
 			board.Clear();
 			for (int row = 0; row < 9; row++)
 				for (int col = 0; col < 9; col++)
 					board[BoardMath.RowColToOrdinal(row, col)] = ((col + row) % 9) + 1;
+			board.ResumeChangeEvents();
 		}
 
 		public static void FillStriped(SudokuBoard board)
 		{
+			board.SuppressChangeEvents();
 			board.Clear();
 			for (int row = 0; row < 9; row++)
 			{
@@ -19,6 +22,7 @@
 				for (int col = 0; col < 9; col++)
 					board[BoardMath.RowColToOrdinal(row, col)] = ((col + rowOffset) % 9) + 1;
 			}
+			board.ResumeChangeEvents();
 		}
 
 		public static void FillSeed(SudokuBoard board, int difficulty, int seed)
