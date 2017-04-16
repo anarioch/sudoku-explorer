@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -26,7 +27,10 @@ namespace SudokuExplorer
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			bool success = int.TryParse((string)value, out int result);
+			string stringValue = (string)value;
+			if (stringValue.Length > 1)
+				stringValue = stringValue.Substring(stringValue.Length - 1);
+			bool success = int.TryParse(stringValue, out int result);
 			return result;
 		}
 	}
@@ -36,8 +40,16 @@ namespace SudokuExplorer
 	/// </summary>
 	public partial class BoardControl : UserControl
 	{
-
-		public int CellFontSize { get; set; } = 20;
+		private BoardViewModel _viewModel;
+		public BoardViewModel ViewModel
+		{
+			get { return _viewModel; }
+			set
+			{
+				_viewModel = value;
+				DataContext = _viewModel;
+			}
+		}
 
 		public BoardControl()
 		{

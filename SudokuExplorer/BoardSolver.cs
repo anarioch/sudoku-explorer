@@ -72,7 +72,7 @@ namespace SudokuExplorer
 				for (int col = 0; col < 9; col++)
 				{
 					int ordinal = BoardMath.RowColToOrdinal(row, col);
-					if (board[ordinal].Value != 0)
+					if (board[ordinal] != 0)
 						continue;
 
 					int box = BoardMath.RowColToBox(row, col);
@@ -108,7 +108,7 @@ namespace SudokuExplorer
                 for (int col = 0; col < 9; col++)
                 {
                     int ordinal = BoardMath.RowColToOrdinal(row, col);
-                    if (board[ordinal].Value != 0)
+                    if (board[ordinal] != 0)
                         continue;
 
                     int box = BoardMath.RowColToBox(row, col);

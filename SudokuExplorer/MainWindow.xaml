@@ -9,10 +9,10 @@
         x:Name="me">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
-            <local:BoardControl x:Name="boardControl" DataContext="{Binding Path=Board}" Margin="10" />
+            <local:BoardControl x:Name="boardControl" Margin="10" />
             <GroupBox Header="Solve">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validator.IsValid, ElementName=me}" VerticalAlignment="Center">
+                    <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validity}" VerticalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>

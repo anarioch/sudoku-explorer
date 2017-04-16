@@ -71,7 +71,12 @@ namespace SudokuExplorer
 		}
 	}
 
-	public class BoardValidator : INotifyPropertyChanged
+	public interface IBoardValidator : INotifyPropertyChanged
+	{
+		Validity IsValid { get; }
+	}
+
+	public class BoardValidator : IBoardValidator
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 

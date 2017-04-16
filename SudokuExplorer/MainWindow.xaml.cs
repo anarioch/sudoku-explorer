@@ -23,30 +23,33 @@ namespace SudokuExplorer
 	public partial class MainWindow : Window
 	{
 		
+		private SudokuBoard _board;
+		private readonly BoardValidator _validator = new BoardValidator();
+		private readonly BoardViewModel _viewModel = new BoardViewModel();
+
 		public MainWindow()
 		{
 			Board = new SudokuBoard();
 			InitializeComponent();
-			DataContext = this;
+			_viewModel.Validator = _validator;
+			boardControl.ViewModel = _viewModel;
+			DataContext = _viewModel;
 		}
 
-		private SudokuBoard _board;
+#region Properties
 		public SudokuBoard Board
 		{
 			get { return _board; }
 			set
 			{
 				_board = value;
-				if (_board != null)
-				{
-					_validator.Board = _board;
-				}
+				_validator.Board = _board;
+				_viewModel.Board = _board;
 			}
 		}
+#endregion
 
-		private BoardValidator _validator = new BoardValidator();
-		public BoardValidator Validator { get { return _validator; } }
-
+#region Button Handlers
 		private void FillSequentialButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillSequential(Board);
@@ -91,7 +94,7 @@ namespace SudokuExplorer
 			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.Eliminate(Board);
 			stopwatch.Stop();
 			foreach (KeyValuePair<int, int> pair in candidates)
-				Board[pair.Key].Value = pair.Value;
+				Board[pair.Key] = pair.Value;
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
@@ -103,7 +106,7 @@ namespace SudokuExplorer
 			Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
 			stopwatch.Stop();
 			foreach (KeyValuePair<int, int> pair in candidates)
-				Board[pair.Key].Value = pair.Value;
+				Board[pair.Key] = pair.Value;
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
@@ -118,12 +121,12 @@ namespace SudokuExplorer
 			{
 				Dictionary<int, int> candidates = EliminationSolver.Soles(Board);
 				foreach (KeyValuePair<int, int> pair in candidates)
-					Board[pair.Key].Value = pair.Value;
+					Board[pair.Key] = pair.Value;
 				bool foundSolesCandidates = candidates.Count != 0;
 
 				candidates = EliminationSolver.Eliminate(Board);
 				foreach (KeyValuePair<int, int> pair in candidates)
-					Board[pair.Key].Value = pair.Value;
+					Board[pair.Key] = pair.Value;
 				bool foundEliminationCandidates = candidates.Count != 0;
 
 				foundCandidates = foundSolesCandidates || foundEliminationCandidates;
@@ -133,5 +136,6 @@ namespace SudokuExplorer
 
 			statusText.Text = String.Format("Ran {0} iterations in {1}ms", iterations, stopwatch.ElapsedMilliseconds);
 		}
+#endregion
 	}
 }

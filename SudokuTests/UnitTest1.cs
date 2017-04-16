@@ -14,9 +14,9 @@ namespace SudokuTests
 
 			BoardFactory.FillSequential(board);
 
-			Assert.AreEqual(1, board.Rows[0][0]);
-			Assert.AreEqual(2, board.Rows[1][0]);
-			Assert.AreEqual(6, board.Rows[1][4]);
+			Assert.AreEqual(1, board.Row(0)[0]);
+			Assert.AreEqual(2, board.Row(1)[0]);
+			Assert.AreEqual(6, board.Row(1)[4]);
 		}
 
 		[TestMethod]
@@ -26,9 +26,9 @@ namespace SudokuTests
 
 			BoardFactory.FillSequential(board);
 
-			Assert.AreEqual(1, board.Rows[0][0]);
-			Assert.AreEqual(2, board.Rows[1][0]);
-			Assert.AreEqual(6, board.Rows[1][4]);
+			Assert.AreEqual(1, board.Row(0)[0]);
+			Assert.AreEqual(2, board.Row(1)[0]);
+			Assert.AreEqual(6, board.Row(1)[4]);
 		}
 
 		[TestMethod]
@@ -46,7 +46,7 @@ namespace SudokuTests
 			Validity valid3 = BoardValidation.Validate(board);
 			Assert.AreEqual(Validity.COMPLETE, valid3);
 
-			board[3].Value = 15;
+			board[3] = 15;
 			Validity valid4 = BoardValidation.Validate(board);
 			Assert.AreEqual(Validity.INVALID, valid4);
 		}

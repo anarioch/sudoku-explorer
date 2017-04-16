@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 namespace SudokuExplorer
 {
@@ -57,8 +58,8 @@ namespace SudokuExplorer
 		}
 		public int this[int col]
 		{
-			get { return _board.GetCell(_row, col); }
-			set { _board.SetCell(_row, col, value); }
+			get { return _board[BoardMath.RowColToOrdinal(_row, col)]; }
+			set { _board[BoardMath.RowColToOrdinal(_row, col)] = value; }
 		}
 	}
 
@@ -73,8 +74,8 @@ namespace SudokuExplorer
 		}
 		public int this[int row]
 		{
-			get { return _board.GetCell(row, _col); }
-			set { _board.SetCell(row, _col, value); }
+			get { return _board[BoardMath.RowColToOrdinal(row, _col)]; }
+			set { _board[BoardMath.RowColToOrdinal(row, _col)] = value; }
 		}
 	}
 
@@ -89,106 +90,40 @@ namespace SudokuExplorer
 		}
 		public int this[int index]
 		{
-			get { return _board[BoardMath.BoxToOrdinal(_box, index)].Value; }
-			set { _board[BoardMath.BoxToOrdinal(_box, index)].Value = value; }
-		}
-	}
-
-	public class BoardCell : INotifyPropertyChanged
-	{
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		// This method is called by the Set accessor of each property.
-		// The CallerMemberName attribute that is applied to the optional propertyName
-		// parameter causes the property name of the caller to be substituted as an argument.
-		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		private int _value = 0;
-		private bool _preset = false;
-
-		public int Value
-		{
-			get { return _value; }
-			set
-			{
-				if (!_preset && value != _value)
-				{
-					_value = value;
-					NotifyPropertyChanged();
-
-				}
-			}
-		}
-
-		public bool IsPreset
-		{
-			get { return _preset; }
-			set
-			{
-				if (value != _preset)
-				{
-					_preset = value;
-					NotifyPropertyChanged();
-				}
-			}
+			get { return _board[BoardMath.BoxToOrdinal(_box, index)]; }
+			set { _board[BoardMath.BoxToOrdinal(_box, index)] = value; }
 		}
 	}
 
 	public delegate void BoardChangedEventHandler(SudokuBoard sender);
 
-	public class SudokuBoard : INotifyPropertyChanged
+	public class SudokuBoard
 	{
-		private BoardCell[] _data = new BoardCell[9 * 9];
+		private int[]  _data   = new int[9 * 9];
+		private bool[] _preset = new bool[9 * 9];
 
 		private BoardRow[] _rows;
 		private BoardCol[] _cols;
+		private BoardBox[] _boxes;
 
 		public event BoardChangedEventHandler BoardChanged;
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void NotifyBoardChanged()
 		{
 			BoardChanged?.Invoke(this);
 		}
-		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-		{
-			PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		private void OnCellChanged(object sender, PropertyChangedEventArgs args)
-		{
-			NotifyBoardChanged();
-		}
 
 		public SudokuBoard()
 		{
-			for (int i = 0; i < 81; i++)
-			{
-				_data[i] = new BoardCell();
-				_data[i].PropertyChanged += OnCellChanged;
-			}
-
-			_rows = new BoardRow[9];
-			_cols = new BoardCol[9];
+			_rows  = new BoardRow[9];
+			_cols  = new BoardCol[9];
+			_boxes = new BoardBox[9];
 			for (int i = 0; i < 9; i++)
 			{
-				_rows[i] = new BoardRow(this, i);
-				_cols[i] = new BoardCol(this, i);
+				_rows[i]  = new BoardRow(this, i);
+				_cols[i]  = new BoardCol(this, i);
+				_boxes[i] = new BoardBox(this, i);
 			}
-		}
-
-		public IBoardLine[] Rows
-		{
-			get { return _rows; }
-		}
-
-		public IBoardLine[] Cols
-		{
-			get { return _cols; }
 		}
 
 		public IBoardLine Row(int row)
@@ -203,43 +138,43 @@ namespace SudokuExplorer
 
 		public IBoardLine Box(int box)
 		{
-			return new BoardBox(this, box);
+			return _boxes[box];
 		}
 
-		public int GetCell(int row, int col)
-		{
-			return this[9 * row + col].Value;
-		}
-
-		public void SetCell(int row, int col, int value)
-		{
-			this[9 * row + col].Value = value;
-		}
-
-		public BoardCell this[int index]
+		public int this[int index]
 		{
 			get { return _data[index]; }
+			set
+			{
+				if (!_preset[index] && value != _data[index])
+				{
+					_data[index] = value;
+					NotifyBoardChanged();
+				}
+			}
+		}
+
+		public bool IsPreset(int index)
+		{
+			return _preset[index];
 		}
 
 		public void Preset(int[] data)
 		{
+			Array.Copy(data, _data, 81);
 			for (int index = 0; index < 81; index++)
-			{
-				BoardCell cell = this[index];
-				cell.IsPreset = false;
-				cell.Value = data[index];
-				cell.IsPreset = (data[index] != 0);
-			}
+				_preset[index] = (data[index] != 0);
+			NotifyBoardChanged();
 		}
 
 		public void Clear()
 		{
 			for (int index = 0; index < 81; index++)
 			{
-				BoardCell cell = this[index];
-				cell.IsPreset = false;
-				cell.Value = 0;
+				_preset[index] = false;
+				_data[index] = 0;
 			}
+			NotifyBoardChanged();
 		}
 	}
 
@@ -250,18 +185,18 @@ namespace SudokuExplorer
 			board.Clear();
 			for (int row = 0; row < 9; row++)
 				for (int col = 0; col < 9; col++)
-					board.SetCell(row, col, ((col + row) % 9) + 1);
+					board[BoardMath.RowColToOrdinal(row, col)] = ((col + row) % 9) + 1;
 		}
 
 		public static void FillStriped(SudokuBoard board)
 		{
 			board.Clear();
 			for (int row = 0; row < 9; row++)
+			{
+				int rowOffset = 3 * (row % 3) + row / 3;
 				for (int col = 0; col < 9; col++)
-				{
-					int rowOffset = 3 * (row % 3) + row / 3;
-					board.SetCell(row, col, ((col + rowOffset) % 9) + 1);
-				}
+					board[BoardMath.RowColToOrdinal(row, col)] = ((col + rowOffset) % 9) + 1;
+			}
 		}
 
 		public static void FillSeed(SudokuBoard board, int difficulty, int seed)
