@@ -73,6 +73,8 @@
     <Compile Include="BoardControl.xaml.cs">
       <DependentUpon>BoardControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BoardFactory.cs" />
+    <Compile Include="BoardMath.cs" />
     <Compile Include="BoardSolver.cs" />
     <Compile Include="BoardValidation.cs" />
     <Compile Include="BoardViewModel.cs" />
