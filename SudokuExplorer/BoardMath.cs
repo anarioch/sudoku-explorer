@@ -7,6 +7,11 @@
 			return 9 * row + col;
 		}
 
+		public static int ColRowToOrdinal(int col, int row)
+		{
+			return 9 * row + col;
+		}
+
 		public static void OrdinalToRowCol(int ordinal, out int row, out int col)
 		{
 			row = ordinal / 9;

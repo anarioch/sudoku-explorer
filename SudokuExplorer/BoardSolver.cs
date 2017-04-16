@@ -91,7 +91,7 @@ namespace SudokuExplorer
 				FindSolesInLine(rowCandidates, BoardMath.RowColToOrdinal, cellCandidates, result);
 
 				// Count number of places that each colCandidate can go within this col
-				FindSolesInLine(colCandidates, (col, row) => BoardMath.RowColToOrdinal(row, col), cellCandidates, result);
+				FindSolesInLine(colCandidates, BoardMath.ColRowToOrdinal, cellCandidates, result);
 
 				// Count number of places that each boxCandidate can go within this box
 				FindSolesInLine(boxCandidates, BoardMath.BoxToOrdinal, cellCandidates, result);
