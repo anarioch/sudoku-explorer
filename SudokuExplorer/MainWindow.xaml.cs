@@ -91,13 +91,13 @@ namespace SudokuExplorer
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			IEnumerable<KeyValuePair<int, int>> candidates = EliminationSolver.Solve(Board, true, false);
+			IEnumerable<SolveCandidate> candidates = EliminationSolver.Solve(Board, true, false);
 			stopwatch.Stop();
 
 			// Apply the solutions (pausing UI updates until the end)
 			Board.SuppressChangeEvents();
-			foreach (KeyValuePair<int, int> pair in candidates)
-				Board[pair.Key] = pair.Value;
+			foreach (SolveCandidate candidate in candidates)
+				Board[candidate.Ordinal] = candidate.Candidate;
 			Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
@@ -107,13 +107,13 @@ namespace SudokuExplorer
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
-			Dictionary<int, int> candidates = EliminationSolver.Solve(Board, false, true);
+			IEnumerable<SolveCandidate> candidates = EliminationSolver.Solve(Board, false, true);
 			stopwatch.Stop();
 
 			// Apply the solutions (pausing UI updates until the end)
 			Board.SuppressChangeEvents();
-			foreach (KeyValuePair<int, int> pair in candidates)
-				Board[pair.Key] = pair.Value;
+			foreach (SolveCandidate candidate in candidates)
+				Board[candidate.Ordinal] = candidate.Candidate;
 			Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
@@ -131,9 +131,13 @@ namespace SudokuExplorer
 			do
 			{
 				// Try looking for candidates
-				Dictionary<int, int> candidates = EliminationSolver.Solve(Board, true, true);
-				foreach (KeyValuePair<int, int> pair in candidates)
-					Board[pair.Key] = pair.Value;
+				List<SolveCandidate> candidates = EliminationSolver.Solve(Board, true, true);
+				foundCandidates = false;
+				foreach (SolveCandidate candidate in candidates)
+				{
+					Board[candidate.Ordinal] = candidate.Candidate;
+					foundCandidates = true;
+				}
 
 				// Repeat until nothing is found
 				foundCandidates = candidates.Count != 0;

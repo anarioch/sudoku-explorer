@@ -6,6 +6,20 @@ using System.Threading.Tasks;
 
 namespace SudokuExplorer
 {
+	class SolveCandidate
+	{
+		public int Ordinal   { get; set; }
+		public int Candidate { get; set; }
+		public string Reason { get; set; }
+
+		public SolveCandidate(int ordinal, int candidate, string reason)
+		{
+			Ordinal = ordinal;
+			Candidate = candidate;
+			Reason = reason;
+		}
+	}
+
 	class EliminationSolver
 	{
 		//private SudokuBoard _board;
@@ -51,9 +65,9 @@ namespace SudokuExplorer
 			return 0;
 		}
 
-		public static Dictionary<int, int> Solve(SudokuBoard board, bool eliminate, bool soles)
+		public static List<SolveCandidate> Solve(SudokuBoard board, bool eliminate, bool soles)
 		{
-			Dictionary<int, int> result = new Dictionary<int, int>();
+			List<SolveCandidate> result = new List<SolveCandidate>();
 
             // Find the missing entries on each row/column/box
             int[] rowCandidates = new int[9];
@@ -67,21 +81,33 @@ namespace SudokuExplorer
             }
 
             // Find the intersection of these at each cell
+			// Each intersect is a bitmask, with bits corresponding to the candidates
             int[] cellCandidates = new int[81];
             for (int row = 0; row < 9; row++)
             {
                 for (int col = 0; col < 9; col++)
                 {
                     int ordinal = BoardMath.RowColToOrdinal(row, col);
-                    if (board[ordinal] != 0)
+                    int box = BoardMath.RowColToBox(row, col);
+
+					// Skip this cell if it already has a number
+					if (board[ordinal] != 0)
                         continue;
 
-                    int box = BoardMath.RowColToBox(row, col);
+					// Find the intersection of candidates from the row/col/box
                     int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
                     cellCandidates[ordinal] = intersect;
+				}
+			}
 
-					if (eliminate && intersect != 0 && (intersect & (intersect - 1)) == 0)
-						result[ordinal] = FromMask(intersect);
+			// If only one bit is set then there is a single candidate in this cell
+			if (eliminate)
+			{
+				for (int ordinal = 0; ordinal < 81; ordinal++)
+				{
+					int intersect = cellCandidates[ordinal];
+					if (intersect != 0 && (intersect & (intersect - 1)) == 0)
+						result.Add(new SolveCandidate(ordinal, FromMask(intersect), "All other digits eliminated"));
 				}
 			}
 
@@ -102,7 +128,7 @@ namespace SudokuExplorer
 
         private delegate int LineOrdinalMethod(int outer, int inner);
 
-        private static void FindSolesInLine(int[] lineCandidates, LineOrdinalMethod lineOrdinal, int[] cellCandidates, Dictionary<int, int> result)
+        private static void FindSolesInLine(int[] lineCandidates, LineOrdinalMethod lineOrdinal, int[] cellCandidates, List<SolveCandidate> result)
         {
             for (int outer = 0; outer < 9; outer++)
             {
@@ -129,8 +155,8 @@ namespace SudokuExplorer
 
                     // If there was only one, then mark the position we saw as a solution for this candidate
                     if (count == 1)
-                        result[lastOrdinal] = candidate;
-                }
+						result.Add(new SolveCandidate(lastOrdinal, candidate, "Only location for this digit"));
+				}
             }
         }
     }
