@@ -20,6 +20,15 @@ namespace SudokuExplorer
 		}
 	}
 
+	class BoardCandidates
+	{
+		public readonly int[] rowCandidates = new int[9];
+		public readonly int[] colCandidates = new int[9];
+		public readonly int[] boxCandidates = new int[9];
+
+		public readonly int[] cellCandidates = new int[81];
+	}
+
 	class EliminationSolver
 	{
 		//private SudokuBoard _board;
@@ -65,47 +74,55 @@ namespace SudokuExplorer
 			return 0;
 		}
 
-		public static List<SolveCandidate> Solve(SudokuBoard board, bool eliminate, bool soles)
+		public static BoardCandidates Candidates(SudokuBoard board)
 		{
-			List<SolveCandidate> result = new List<SolveCandidate>();
+			BoardCandidates candidates = new BoardCandidates();
+			// Find the missing entries on each row/column/box
+			for (int i = 0; i < 9; i++)
+			{
+				candidates.rowCandidates[i] = MissingEntries(board.Row(i));
+				candidates.colCandidates[i] = MissingEntries(board.Col(i));
+				candidates.boxCandidates[i] = MissingEntries(board.Box(i));
+			}
 
-            // Find the missing entries on each row/column/box
-            int[] rowCandidates = new int[9];
-            int[] colCandidates = new int[9];
-            int[] boxCandidates = new int[9];
-            for (int i = 0; i < 9; i++)
-            {
-                rowCandidates[i] = MissingEntries(board.Row(i));
-                colCandidates[i] = MissingEntries(board.Col(i));
-                boxCandidates[i] = MissingEntries(board.Box(i));
-            }
-
-            // Find the intersection of these at each cell
+			// Find the intersection of these at each cell
 			// Each intersect is a bitmask, with bits corresponding to the candidates
-            int[] cellCandidates = new int[81];
-            for (int row = 0; row < 9; row++)
-            {
-                for (int col = 0; col < 9; col++)
-                {
-                    int ordinal = BoardMath.RowColToOrdinal(row, col);
-                    int box = BoardMath.RowColToBox(row, col);
+			for (int row = 0; row < 9; row++)
+			{
+				for (int col = 0; col < 9; col++)
+				{
+					int ordinal = BoardMath.RowColToOrdinal(row, col);
+					int box = BoardMath.RowColToBox(row, col);
 
 					// Skip this cell if it already has a number
 					if (board[ordinal] != 0)
-                        continue;
+						continue;
 
 					// Find the intersection of candidates from the row/col/box
-                    int intersect = rowCandidates[row] & colCandidates[col] & boxCandidates[box];
-                    cellCandidates[ordinal] = intersect;
+					int intersect = candidates.rowCandidates[row] & candidates.colCandidates[col] & candidates.boxCandidates[box];
+					candidates.cellCandidates[ordinal] = intersect;
 				}
 			}
+
+			return candidates;
+		}
+
+		public static List<SolveCandidate> Solve(SudokuBoard board, bool eliminate, bool soles)
+		{
+			BoardCandidates candidates = Candidates(board);
+			return Solve(candidates, eliminate, soles);
+		}
+
+		public static List<SolveCandidate> Solve(BoardCandidates candidates, bool eliminate, bool soles)
+		{
+			List<SolveCandidate> result = new List<SolveCandidate>();
 
 			// If only one bit is set then there is a single candidate in this cell
 			if (eliminate)
 			{
 				for (int ordinal = 0; ordinal < 81; ordinal++)
 				{
-					int intersect = cellCandidates[ordinal];
+					int intersect = candidates.cellCandidates[ordinal];
 					if (intersect != 0 && (intersect & (intersect - 1)) == 0)
 						result.Add(new SolveCandidate(ordinal, FromMask(intersect), "All other digits eliminated"));
 				}
@@ -114,13 +131,13 @@ namespace SudokuExplorer
 			if (soles)
 			{
 				// Count number of places that each rowCandidate can go within this row
-				FindSolesInLine(rowCandidates, BoardMath.RowColToOrdinal, cellCandidates, result);
+				FindSolesInLine(candidates.rowCandidates, BoardMath.RowColToOrdinal, candidates.cellCandidates, result);
 
 				// Count number of places that each colCandidate can go within this col
-				FindSolesInLine(colCandidates, BoardMath.ColRowToOrdinal, cellCandidates, result);
+				FindSolesInLine(candidates.colCandidates, BoardMath.ColRowToOrdinal, candidates.cellCandidates, result);
 
 				// Count number of places that each boxCandidate can go within this box
-				FindSolesInLine(boxCandidates, BoardMath.BoxToOrdinal, cellCandidates, result);
+				FindSolesInLine(candidates.boxCandidates, BoardMath.BoxToOrdinal, candidates.cellCandidates, result);
 			}
 
             return result;

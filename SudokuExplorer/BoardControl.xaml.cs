@@ -66,6 +66,7 @@ namespace SudokuExplorer
 
 		private void OnCellKeyDown(object sender, KeyEventArgs e)
 		{
+			// Note: This stopped working as of the BoardCellControl refactor
 			if (sender is TextBox)
 			{
 				UIElement control = (UIElement)sender;

@@ -70,6 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BoardCellControl.xaml.cs">
+      <DependentUpon>BoardCellControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BoardControl.xaml.cs">
       <DependentUpon>BoardControl.xaml</DependentUpon>
     </Compile>
@@ -79,6 +82,10 @@
     <Compile Include="BoardValidation.cs" />
     <Compile Include="BoardViewModel.cs" />
     <Compile Include="SudokuBoard.cs" />
+    <Page Include="BoardCellControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="BoardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

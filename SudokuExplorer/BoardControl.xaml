@@ -7,26 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="330" d:DesignWidth="330"
              x:Name="rootControl">
-    <UserControl.Resources>
-        <local:SudokuIntToStringConverter x:Key="converter" />
-        <Style TargetType="TextBox">
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="Width" Value="35" />
-            <Setter Property="Height" Value="35" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Style.Triggers>
-                <Trigger Property="IsFocused" Value="true">
-                    <Setter Property="Background" Value="Yellow" />
-                </Trigger>
-                <DataTrigger Binding="{Binding IsPreset}" Value="true">
-                    <Setter Property="FontWeight" Value="Bold" />
-                    <Setter Property="IsReadOnly" Value="true" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
     <Grid x:Name="theGrid" PreviewKeyDown="OnCellKeyDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -54,94 +34,95 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="cell00" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[0]}"/>
-        <TextBox x:Name="cell01" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[1]}"/>
-        <TextBox x:Name="cell02" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[2]}"/>
-        <TextBox x:Name="cell03" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[3]}"/>
-        <TextBox x:Name="cell04" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[4]}"/>
-        <TextBox x:Name="cell05" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[5]}"/>
-        <TextBox x:Name="cell06" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[6]}"/>
-        <TextBox x:Name="cell07" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[7]}"/>
-        <TextBox x:Name="cell08" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[8]}"/>
 
-        <TextBox x:Name="cell10" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[9]}"/>
-        <TextBox x:Name="cell11" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[10]}"/>
-        <TextBox x:Name="cell12" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[11]}"/>
-        <TextBox x:Name="cell13" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[12]}"/>
-        <TextBox x:Name="cell14" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[13]}"/>
-        <TextBox x:Name="cell15" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[14]}"/>
-        <TextBox x:Name="cell16" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[15]}"/>
-        <TextBox x:Name="cell17" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[16]}"/>
-        <TextBox x:Name="cell18" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="1" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[17]}"/>
+        <local:BoardCellControl x:Name="cell00" Grid.Row="0" Grid.Column="0"  DataContext="{Binding Item[0]}"/>
+        <local:BoardCellControl x:Name="cell01" Grid.Row="0" Grid.Column="1"  DataContext="{Binding Item[1]}"/>
+        <local:BoardCellControl x:Name="cell02" Grid.Row="0" Grid.Column="2"  DataContext="{Binding Item[2]}"/>
+        <local:BoardCellControl x:Name="cell03" Grid.Row="0" Grid.Column="4"  DataContext="{Binding Item[3]}"/>
+        <local:BoardCellControl x:Name="cell04" Grid.Row="0" Grid.Column="5"  DataContext="{Binding Item[4]}"/>
+        <local:BoardCellControl x:Name="cell05" Grid.Row="0" Grid.Column="6"  DataContext="{Binding Item[5]}"/>
+        <local:BoardCellControl x:Name="cell06" Grid.Row="0" Grid.Column="8"  DataContext="{Binding Item[6]}"/>
+        <local:BoardCellControl x:Name="cell07" Grid.Row="0" Grid.Column="9"  DataContext="{Binding Item[7]}"/>
+        <local:BoardCellControl x:Name="cell08" Grid.Row="0" Grid.Column="10" DataContext="{Binding Item[8]}"/>
 
-        <TextBox x:Name="cell20" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[18]}"/>
-        <TextBox x:Name="cell21" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[19]}"/>
-        <TextBox x:Name="cell22" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[20]}"/>
-        <TextBox x:Name="cell23" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[21]}"/>
-        <TextBox x:Name="cell24" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[22]}"/>
-        <TextBox x:Name="cell25" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[23]}"/>
-        <TextBox x:Name="cell26" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[24]}"/>
-        <TextBox x:Name="cell27" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[25]}"/>
-        <TextBox x:Name="cell28" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="2" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[26]}"/>
+        <local:BoardCellControl x:Name="cell10" Grid.Row="1" Grid.Column="0"  DataContext="{Binding Item[9]}"/>
+        <local:BoardCellControl x:Name="cell11" Grid.Row="1" Grid.Column="1"  DataContext="{Binding Item[10]}"/>
+        <local:BoardCellControl x:Name="cell12" Grid.Row="1" Grid.Column="2"  DataContext="{Binding Item[11]}"/>
+        <local:BoardCellControl x:Name="cell13" Grid.Row="1" Grid.Column="4"  DataContext="{Binding Item[12]}"/>
+        <local:BoardCellControl x:Name="cell14" Grid.Row="1" Grid.Column="5"  DataContext="{Binding Item[13]}"/>
+        <local:BoardCellControl x:Name="cell15" Grid.Row="1" Grid.Column="6"  DataContext="{Binding Item[14]}"/>
+        <local:BoardCellControl x:Name="cell16" Grid.Row="1" Grid.Column="8"  DataContext="{Binding Item[15]}"/>
+        <local:BoardCellControl x:Name="cell17" Grid.Row="1" Grid.Column="9"  DataContext="{Binding Item[16]}"/>
+        <local:BoardCellControl x:Name="cell18" Grid.Row="1" Grid.Column="10" DataContext="{Binding Item[17]}"/>
 
-        <TextBox x:Name="cell30" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[27]}"/>
-        <TextBox x:Name="cell31" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[28]}"/>
-        <TextBox x:Name="cell32" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[29]}"/>
-        <TextBox x:Name="cell33" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[30]}"/>
-        <TextBox x:Name="cell34" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[31]}"/>
-        <TextBox x:Name="cell35" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[32]}"/>
-        <TextBox x:Name="cell36" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[33]}"/>
-        <TextBox x:Name="cell37" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[34]}"/>
-        <TextBox x:Name="cell38" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="4" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[35]}"/>
+        <local:BoardCellControl x:Name="cell20" Grid.Row="2" Grid.Column="0"  DataContext="{Binding Item[18]}"/>
+        <local:BoardCellControl x:Name="cell21" Grid.Row="2" Grid.Column="1"  DataContext="{Binding Item[19]}"/>
+        <local:BoardCellControl x:Name="cell22" Grid.Row="2" Grid.Column="2"  DataContext="{Binding Item[20]}"/>
+        <local:BoardCellControl x:Name="cell23" Grid.Row="2" Grid.Column="4"  DataContext="{Binding Item[21]}"/>
+        <local:BoardCellControl x:Name="cell24" Grid.Row="2" Grid.Column="5"  DataContext="{Binding Item[22]}"/>
+        <local:BoardCellControl x:Name="cell25" Grid.Row="2" Grid.Column="6"  DataContext="{Binding Item[23]}"/>
+        <local:BoardCellControl x:Name="cell26" Grid.Row="2" Grid.Column="8"  DataContext="{Binding Item[24]}"/>
+        <local:BoardCellControl x:Name="cell27" Grid.Row="2" Grid.Column="9"  DataContext="{Binding Item[25]}"/>
+        <local:BoardCellControl x:Name="cell28" Grid.Row="2" Grid.Column="10" DataContext="{Binding Item[26]}"/>
 
-        <TextBox x:Name="cell40" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[36]}"/>
-        <TextBox x:Name="cell41" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[37]}"/>
-        <TextBox x:Name="cell42" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[38]}"/>
-        <TextBox x:Name="cell43" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[39]}"/>
-        <TextBox x:Name="cell44" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[40]}"/>
-        <TextBox x:Name="cell45" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[41]}"/>
-        <TextBox x:Name="cell46" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[42]}"/>
-        <TextBox x:Name="cell47" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[43]}"/>
-        <TextBox x:Name="cell48" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="5" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[44]}"/>
+        <local:BoardCellControl x:Name="cell30" Grid.Row="4" Grid.Column="0"  DataContext="{Binding Item[27]}"/>
+        <local:BoardCellControl x:Name="cell31" Grid.Row="4" Grid.Column="1"  DataContext="{Binding Item[28]}"/>
+        <local:BoardCellControl x:Name="cell32" Grid.Row="4" Grid.Column="2"  DataContext="{Binding Item[29]}"/>
+        <local:BoardCellControl x:Name="cell33" Grid.Row="4" Grid.Column="4"  DataContext="{Binding Item[30]}"/>
+        <local:BoardCellControl x:Name="cell34" Grid.Row="4" Grid.Column="5"  DataContext="{Binding Item[31]}"/>
+        <local:BoardCellControl x:Name="cell35" Grid.Row="4" Grid.Column="6"  DataContext="{Binding Item[32]}"/>
+        <local:BoardCellControl x:Name="cell36" Grid.Row="4" Grid.Column="8"  DataContext="{Binding Item[33]}"/>
+        <local:BoardCellControl x:Name="cell37" Grid.Row="4" Grid.Column="9"  DataContext="{Binding Item[34]}"/>
+        <local:BoardCellControl x:Name="cell38" Grid.Row="4" Grid.Column="10" DataContext="{Binding Item[35]}"/>
 
-        <TextBox x:Name="cell50" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[45]}"/>
-        <TextBox x:Name="cell51" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[46]}"/>
-        <TextBox x:Name="cell52" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[47]}"/>
-        <TextBox x:Name="cell53" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[48]}"/>
-        <TextBox x:Name="cell54" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[49]}"/>
-        <TextBox x:Name="cell55" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[50]}"/>
-        <TextBox x:Name="cell56" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[51]}"/>
-        <TextBox x:Name="cell57" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[52]}"/>
-        <TextBox x:Name="cell58" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="6" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[53]}"/>
+        <local:BoardCellControl x:Name="cell40" Grid.Row="5" Grid.Column="0"  DataContext="{Binding Item[36]}"/>
+        <local:BoardCellControl x:Name="cell41" Grid.Row="5" Grid.Column="1"  DataContext="{Binding Item[37]}"/>
+        <local:BoardCellControl x:Name="cell42" Grid.Row="5" Grid.Column="2"  DataContext="{Binding Item[38]}"/>
+        <local:BoardCellControl x:Name="cell43" Grid.Row="5" Grid.Column="4"  DataContext="{Binding Item[39]}"/>
+        <local:BoardCellControl x:Name="cell44" Grid.Row="5" Grid.Column="5"  DataContext="{Binding Item[40]}"/>
+        <local:BoardCellControl x:Name="cell45" Grid.Row="5" Grid.Column="6"  DataContext="{Binding Item[41]}"/>
+        <local:BoardCellControl x:Name="cell46" Grid.Row="5" Grid.Column="8"  DataContext="{Binding Item[42]}"/>
+        <local:BoardCellControl x:Name="cell47" Grid.Row="5" Grid.Column="9"  DataContext="{Binding Item[43]}"/>
+        <local:BoardCellControl x:Name="cell48" Grid.Row="5" Grid.Column="10" DataContext="{Binding Item[44]}"/>
 
-        <TextBox x:Name="cell60" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[54]}"/>
-        <TextBox x:Name="cell61" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[55]}"/>
-        <TextBox x:Name="cell62" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[56]}"/>
-        <TextBox x:Name="cell63" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[57]}"/>
-        <TextBox x:Name="cell64" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[58]}"/>
-        <TextBox x:Name="cell65" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[59]}"/>
-        <TextBox x:Name="cell66" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[60]}"/>
-        <TextBox x:Name="cell67" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[61]}"/>
-        <TextBox x:Name="cell68" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="8" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[62]}"/>
+        <local:BoardCellControl x:Name="cell50" Grid.Row="6" Grid.Column="0"  DataContext="{Binding Item[45]}"/>
+        <local:BoardCellControl x:Name="cell51" Grid.Row="6" Grid.Column="1"  DataContext="{Binding Item[46]}"/>
+        <local:BoardCellControl x:Name="cell52" Grid.Row="6" Grid.Column="2"  DataContext="{Binding Item[47]}"/>
+        <local:BoardCellControl x:Name="cell53" Grid.Row="6" Grid.Column="4"  DataContext="{Binding Item[48]}"/>
+        <local:BoardCellControl x:Name="cell54" Grid.Row="6" Grid.Column="5"  DataContext="{Binding Item[49]}"/>
+        <local:BoardCellControl x:Name="cell55" Grid.Row="6" Grid.Column="6"  DataContext="{Binding Item[50]}"/>
+        <local:BoardCellControl x:Name="cell56" Grid.Row="6" Grid.Column="8"  DataContext="{Binding Item[51]}"/>
+        <local:BoardCellControl x:Name="cell57" Grid.Row="6" Grid.Column="9"  DataContext="{Binding Item[52]}"/>
+        <local:BoardCellControl x:Name="cell58" Grid.Row="6" Grid.Column="10" DataContext="{Binding Item[53]}"/>
 
-        <TextBox x:Name="cell70" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[63]}"/>
-        <TextBox x:Name="cell71" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[64]}"/>
-        <TextBox x:Name="cell72" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[65]}"/>
-        <TextBox x:Name="cell73" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[66]}"/>
-        <TextBox x:Name="cell74" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[67]}"/>
-        <TextBox x:Name="cell75" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[68]}"/>
-        <TextBox x:Name="cell76" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[69]}"/>
-        <TextBox x:Name="cell77" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[70]}"/>
-        <TextBox x:Name="cell78" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="9" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[71]}"/>
+        <local:BoardCellControl x:Name="cell60" Grid.Row="8" Grid.Column="0"  DataContext="{Binding Item[54]}"/>
+        <local:BoardCellControl x:Name="cell61" Grid.Row="8" Grid.Column="1"  DataContext="{Binding Item[55]}"/>
+        <local:BoardCellControl x:Name="cell62" Grid.Row="8" Grid.Column="2"  DataContext="{Binding Item[56]}"/>
+        <local:BoardCellControl x:Name="cell63" Grid.Row="8" Grid.Column="4"  DataContext="{Binding Item[57]}"/>
+        <local:BoardCellControl x:Name="cell64" Grid.Row="8" Grid.Column="5"  DataContext="{Binding Item[58]}"/>
+        <local:BoardCellControl x:Name="cell65" Grid.Row="8" Grid.Column="6"  DataContext="{Binding Item[59]}"/>
+        <local:BoardCellControl x:Name="cell66" Grid.Row="8" Grid.Column="8"  DataContext="{Binding Item[60]}"/>
+        <local:BoardCellControl x:Name="cell67" Grid.Row="8" Grid.Column="9"  DataContext="{Binding Item[61]}"/>
+        <local:BoardCellControl x:Name="cell68" Grid.Row="8" Grid.Column="10" DataContext="{Binding Item[62]}"/>
 
-        <TextBox x:Name="cell80" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="0"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[72]}"/>
-        <TextBox x:Name="cell81" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="1"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[73]}"/>
-        <TextBox x:Name="cell82" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="2"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[74]}"/>
-        <TextBox x:Name="cell83" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="4"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[75]}"/>
-        <TextBox x:Name="cell84" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="5"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[76]}"/>
-        <TextBox x:Name="cell85" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="6"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[77]}"/>
-        <TextBox x:Name="cell86" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="8"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[78]}"/>
-        <TextBox x:Name="cell87" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="9"  PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[79]}"/>
-        <TextBox x:Name="cell88" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="10" Grid.Column="10" PreviewKeyDown="OnCellKeyDown" DataContext="{Binding Item[80]}"/>
+        <local:BoardCellControl x:Name="cell70" Grid.Row="9" Grid.Column="0"  DataContext="{Binding Item[63]}"/>
+        <local:BoardCellControl x:Name="cell71" Grid.Row="9" Grid.Column="1"  DataContext="{Binding Item[64]}"/>
+        <local:BoardCellControl x:Name="cell72" Grid.Row="9" Grid.Column="2"  DataContext="{Binding Item[65]}"/>
+        <local:BoardCellControl x:Name="cell73" Grid.Row="9" Grid.Column="4"  DataContext="{Binding Item[66]}"/>
+        <local:BoardCellControl x:Name="cell74" Grid.Row="9" Grid.Column="5"  DataContext="{Binding Item[67]}"/>
+        <local:BoardCellControl x:Name="cell75" Grid.Row="9" Grid.Column="6"  DataContext="{Binding Item[68]}"/>
+        <local:BoardCellControl x:Name="cell76" Grid.Row="9" Grid.Column="8"  DataContext="{Binding Item[69]}"/>
+        <local:BoardCellControl x:Name="cell77" Grid.Row="9" Grid.Column="9"  DataContext="{Binding Item[70]}"/>
+        <local:BoardCellControl x:Name="cell78" Grid.Row="9" Grid.Column="10" DataContext="{Binding Item[71]}"/>
+
+        <local:BoardCellControl x:Name="cell80" Grid.Row="10" Grid.Column="0"  DataContext="{Binding Item[72]}"/>
+        <local:BoardCellControl x:Name="cell81" Grid.Row="10" Grid.Column="1"  DataContext="{Binding Item[73]}"/>
+        <local:BoardCellControl x:Name="cell82" Grid.Row="10" Grid.Column="2"  DataContext="{Binding Item[74]}"/>
+        <local:BoardCellControl x:Name="cell83" Grid.Row="10" Grid.Column="4"  DataContext="{Binding Item[75]}"/>
+        <local:BoardCellControl x:Name="cell84" Grid.Row="10" Grid.Column="5"  DataContext="{Binding Item[76]}"/>
+        <local:BoardCellControl x:Name="cell85" Grid.Row="10" Grid.Column="6"  DataContext="{Binding Item[77]}"/>
+        <local:BoardCellControl x:Name="cell86" Grid.Row="10" Grid.Column="8"  DataContext="{Binding Item[78]}"/>
+        <local:BoardCellControl x:Name="cell87" Grid.Row="10" Grid.Column="9"  DataContext="{Binding Item[79]}"/>
+        <local:BoardCellControl x:Name="cell88" Grid.Row="10" Grid.Column="10" DataContext="{Binding Item[80]}"/>
     </Grid>
 </UserControl>

@@ -17,11 +17,30 @@ namespace SudokuExplorer
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
+		private void SetHelper(ref bool field, bool value, [CallerMemberName] string propertyName = "")
+		{
+			if (value != field)
+			{
+				field = value;
+				NotifyPropertyChanged(propertyName);
+			}
+		}
+
 		private BoardViewModel _board;
 		private int _index;
 
 		private int _cachedValue;
 		private bool _cachedIsPreset;
+
+		private bool _isCandidate_1;
+		private bool _isCandidate_2;
+		private bool _isCandidate_3;
+		private bool _isCandidate_4;
+		private bool _isCandidate_5;
+		private bool _isCandidate_6;
+		private bool _isCandidate_7;
+		private bool _isCandidate_8;
+		private bool _isCandidate_9;
 
 		public BoardCell(BoardViewModel board, int index)
 		{
@@ -40,15 +59,18 @@ namespace SudokuExplorer
 		public bool IsPreset
 		{
 			get { return _cachedIsPreset; }
-			private set
-			{
-				if (value != _cachedIsPreset)
-				{
-					_cachedIsPreset = value;
-					NotifyPropertyChanged();
-				}
-			}
+			private set { SetHelper(ref _cachedIsPreset, value); }
 		}
+
+		public bool IsCandidate_1 { get { return _isCandidate_1; } set { SetHelper(ref _isCandidate_1, value); } }
+		public bool IsCandidate_2 { get { return _isCandidate_2; } set { SetHelper(ref _isCandidate_2, value); } }
+		public bool IsCandidate_3 { get { return _isCandidate_3; } set { SetHelper(ref _isCandidate_3, value); } }
+		public bool IsCandidate_4 { get { return _isCandidate_4; } set { SetHelper(ref _isCandidate_4, value); } }
+		public bool IsCandidate_5 { get { return _isCandidate_5; } set { SetHelper(ref _isCandidate_5, value); } }
+		public bool IsCandidate_6 { get { return _isCandidate_6; } set { SetHelper(ref _isCandidate_6, value); } }
+		public bool IsCandidate_7 { get { return _isCandidate_7; } set { SetHelper(ref _isCandidate_7, value); } }
+		public bool IsCandidate_8 { get { return _isCandidate_8; } set { SetHelper(ref _isCandidate_8, value); } }
+		public bool IsCandidate_9 { get { return _isCandidate_9; } set { SetHelper(ref _isCandidate_9, value); } }
 
 		internal void OnBoardChanged()
 		{
@@ -129,6 +151,42 @@ namespace SudokuExplorer
 		public BoardCell this[int index]
 		{
 			get { return _data[index]; }
+		}
+
+		public void FindCandidates()
+		{
+			BoardCandidates candidates = EliminationSolver.Candidates(Board);
+			for (int i = 0; i < 81; i++)
+			{
+				BoardCell cell = _data[i];
+				int c = candidates.cellCandidates[i];
+				cell.IsCandidate_1 = (c & (1 << 1)) != 0;
+				cell.IsCandidate_2 = (c & (1 << 2)) != 0;
+				cell.IsCandidate_3 = (c & (1 << 3)) != 0;
+				cell.IsCandidate_4 = (c & (1 << 4)) != 0;
+				cell.IsCandidate_5 = (c & (1 << 5)) != 0;
+				cell.IsCandidate_6 = (c & (1 << 6)) != 0;
+				cell.IsCandidate_7 = (c & (1 << 7)) != 0;
+				cell.IsCandidate_8 = (c & (1 << 8)) != 0;
+				cell.IsCandidate_9 = (c & (1 << 9)) != 0;
+			}
+		}
+
+		public void ClearCandidates()
+		{
+			for (int i = 0; i < 81; i++)
+			{
+				BoardCell cell = _data[i];
+				cell.IsCandidate_1 = false;
+				cell.IsCandidate_2 = false;
+				cell.IsCandidate_3 = false;
+				cell.IsCandidate_4 = false;
+				cell.IsCandidate_5 = false;
+				cell.IsCandidate_6 = false;
+				cell.IsCandidate_7 = false;
+				cell.IsCandidate_8 = false;
+				cell.IsCandidate_9 = false;
+			}
 		}
 
 		private void OnBoardChanged(SudokuBoard sender)

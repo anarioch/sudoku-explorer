@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SudokuExplorer"
         mc:Ignorable="d"
-        Title="Sudoku Explorer" Height="570" Width="525"
+        Title="Sudoku Explorer" Height="580" Width="525"
         x:Name="me">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
@@ -31,6 +31,7 @@
                     <Button x:Name="solveButton" Content="Solve" Margin="10,10" Grid.Row="1" Width="75" Click="SolveButton_Click"/>
                     <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="EliminateButton_Click"/>
                     <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="SolesButton_Click"/>
+                    <Button x:Name="candidatesButton" Content="Candidates" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesButton_Click"/>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
