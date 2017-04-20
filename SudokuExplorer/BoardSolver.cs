@@ -74,6 +74,58 @@ namespace SudokuExplorer
 			return 0;
 		}
 
+		public static BoardCandidates NullCandidates()
+		{
+			return new BoardCandidates();
+		}
+
+		public static BoardCandidates EmptyCandidates(SudokuBoard board)
+		{
+			BoardCandidates candidates = new BoardCandidates();
+
+			// Find the missing entries on each row/column/box
+			for (int i = 0; i < 9; i++)
+			{
+				candidates.rowCandidates[i] = MissingEntries(board.Row(i));
+				candidates.colCandidates[i] = MissingEntries(board.Col(i));
+				candidates.boxCandidates[i] = MissingEntries(board.Box(i));
+			}
+
+			// Initialise each cell candidate to all possible numbers
+			for (int i = 0; i < 81; i++)
+				if (board[i] == 0)
+					candidates.cellCandidates[i] = (1 << 10) - 2;
+
+			return candidates;
+		}
+
+		public static void EliminateRows(BoardCandidates candidates)
+		{
+			for (int i = 0; i < 81; i++)
+			{
+				int row = BoardMath.OrdinalToRow(i);
+				candidates.cellCandidates[i] &= candidates.rowCandidates[row];
+			}
+		}
+
+		public static void EliminateCols(BoardCandidates candidates)
+		{
+			for (int i = 0; i < 81; i++)
+			{
+				int col = BoardMath.OrdinalToCol(i);
+				candidates.cellCandidates[i] &= candidates.colCandidates[col];
+			}
+		}
+
+		public static void EliminateBoxes(BoardCandidates candidates)
+		{
+			for (int i = 0; i < 81; i++)
+			{
+				int box = BoardMath.OrdinalToBox(i);
+				candidates.cellCandidates[i] &= candidates.boxCandidates[box];
+			}
+		}
+
 		public static BoardCandidates Candidates(SudokuBoard board)
 		{
 			BoardCandidates candidates = new BoardCandidates();

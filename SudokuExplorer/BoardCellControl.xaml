@@ -36,7 +36,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <Grid x:Name="candidatesGrid" Margin="1">
+        <Grid x:Name="candidatesGrid" Margin="1" Visibility="{Binding AreCandidatesVisible, Converter={StaticResource BoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>

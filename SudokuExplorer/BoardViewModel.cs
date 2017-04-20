@@ -32,6 +32,8 @@ namespace SudokuExplorer
 		private int _cachedValue;
 		private bool _cachedIsPreset;
 
+		private bool _areCandidatesVisible;
+
 		private bool _isCandidate_1;
 		private bool _isCandidate_2;
 		private bool _isCandidate_3;
@@ -62,6 +64,12 @@ namespace SudokuExplorer
 			private set { SetHelper(ref _cachedIsPreset, value); }
 		}
 
+		public bool AreCandidatesVisible
+		{
+			get { return _areCandidatesVisible; }
+			set { SetHelper(ref _areCandidatesVisible, value); }
+		}
+
 		public bool IsCandidate_1 { get { return _isCandidate_1; } set { SetHelper(ref _isCandidate_1, value); } }
 		public bool IsCandidate_2 { get { return _isCandidate_2; } set { SetHelper(ref _isCandidate_2, value); } }
 		public bool IsCandidate_3 { get { return _isCandidate_3; } set { SetHelper(ref _isCandidate_3, value); } }
@@ -90,6 +98,10 @@ namespace SudokuExplorer
 		private BoardCell[] _data = new BoardCell[9 * 9];
 		private SudokuBoard _board;
 		private IBoardValidator _validator;
+
+		private bool _candidatesActive;
+
+		private BoardCandidates _candidates;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -153,9 +165,26 @@ namespace SudokuExplorer
 			get { return _data[index]; }
 		}
 
+		public bool CandidatesActive
+		{
+			get { return _candidatesActive; }
+			set { _candidatesActive = value; NotifyPropertyChanged(); RefreshCellCandidateVisibility(); }
+		}
+
 		public void FindCandidates()
 		{
 			BoardCandidates candidates = EliminationSolver.Candidates(Board);
+			RefreshCandidates(candidates);
+		}
+
+		private void RefreshCellCandidateVisibility()
+		{
+			foreach (BoardCell cell in _data)
+				cell.AreCandidatesVisible = _candidatesActive;
+		}
+
+		private void RefreshCandidates(BoardCandidates candidates)
+		{
 			for (int i = 0; i < 81; i++)
 			{
 				BoardCell cell = _data[i];
@@ -174,19 +203,31 @@ namespace SudokuExplorer
 
 		public void ClearCandidates()
 		{
-			for (int i = 0; i < 81; i++)
-			{
-				BoardCell cell = _data[i];
-				cell.IsCandidate_1 = false;
-				cell.IsCandidate_2 = false;
-				cell.IsCandidate_3 = false;
-				cell.IsCandidate_4 = false;
-				cell.IsCandidate_5 = false;
-				cell.IsCandidate_6 = false;
-				cell.IsCandidate_7 = false;
-				cell.IsCandidate_8 = false;
-				cell.IsCandidate_9 = false;
-			}
+			RefreshCandidates(EliminationSolver.NullCandidates());
+		}
+
+		public void SetEmptyCandidates()
+		{
+			_candidates = EliminationSolver.EmptyCandidates(Board);
+			RefreshCandidates(_candidates);
+		}
+
+		public void EliminateRows()
+		{
+			EliminationSolver.EliminateRows(_candidates);
+			RefreshCandidates(_candidates);
+		}
+
+		public void EliminateCols()
+		{
+			EliminationSolver.EliminateCols(_candidates);
+			RefreshCandidates(_candidates);
+		}
+
+		public void EliminateBoxes()
+		{
+			EliminationSolver.EliminateBoxes(_candidates);
+			RefreshCandidates(_candidates);
 		}
 
 		private void OnBoardChanged(SudokuBoard sender)

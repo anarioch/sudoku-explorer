@@ -161,6 +161,27 @@ namespace SudokuExplorer
 		{
 			_viewModel.FindCandidates();
 		}
+
+		private void CandidatesBeginButton_Click(object sender, RoutedEventArgs e)
+		{
+			// TODO: Make the Solver stateful, so that this code steps it and the ViewModel notices
+			_viewModel.SetEmptyCandidates();
+		}
+
+		private void CandidatesRowsButton_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.EliminateRows();
+		}
+
+		private void CandidatesColsButton_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.EliminateCols();
+		}
+
+		private void CandidatesBoxesButton_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.EliminateBoxes();
+		}
 		#endregion
 	}
 }

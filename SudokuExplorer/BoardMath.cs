@@ -18,6 +18,23 @@
 			col = ordinal % 9;
 		}
 
+		public static int OrdinalToRow(int ordinal)
+		{
+			return ordinal / 9;
+		}
+
+		public static int OrdinalToCol(int ordinal)
+		{
+			return ordinal % 9;
+		}
+
+		public static int OrdinalToBox(int ordinal)
+		{
+			int row = ordinal / 9;
+			int col = ordinal % 9;
+			return RowColToBox(row, col);
+		}
+
 		public static int RowColToBox(int row, int col)
 		{
 			int boxrow = row / 3;

@@ -5,35 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SudokuExplorer"
         mc:Ignorable="d"
-        Title="Sudoku Explorer" Height="580" Width="525"
+        Title="Sudoku Explorer" Height="580" Width="560"
         x:Name="me">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <local:BoardControl x:Name="boardControl" Margin="10" />
-            <GroupBox Header="Solve">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validity}" VerticalAlignment="Center">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="COMPLETE">
-                                        <Setter Property="Foreground" Value="Green" />
-                                        <Setter Property="FontWeight" Value="Bold" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="INVALID">
-                                        <Setter Property="Foreground" Value="Red" />
-                                        <Setter Property="FontWeight" Value="Bold" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <Button x:Name="solveButton" Content="Solve" Margin="10,10" Grid.Row="1" Width="75" Click="SolveButton_Click"/>
-                    <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="EliminateButton_Click"/>
-                    <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="SolesButton_Click"/>
-                    <Button x:Name="candidatesButton" Content="Candidates" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesButton_Click"/>
-                </StackPanel>
-            </GroupBox>
+            <StackPanel Orientation="Vertical">
+                <GroupBox Header="Solve">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Name="checkStatus2" Width="100" Text="{Binding Validity}" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="COMPLETE">
+                                            <Setter Property="Foreground" Value="Green" />
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="INVALID">
+                                            <Setter Property="Foreground" Value="Red" />
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <Button x:Name="solveButton" Content="Solve" Margin="10,10" Grid.Row="1" Width="75" Click="SolveButton_Click"/>
+                        <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="EliminateButton_Click"/>
+                        <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="SolesButton_Click"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Candidates">
+                    <StackPanel Orientation="Vertical">
+                        <CheckBox x:Name="candidatesVisibleCheckBox" Margin="10" IsChecked="{Binding CandidatesActive}">Show Candidates</CheckBox>
+                        <Button x:Name="candidatesButton" Content="Complete" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesButton_Click"/>
+                        <Button x:Name="candidatesBeginButton" Content="Begin" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesBeginButton_Click"/>
+                        <Button x:Name="candidatesRowsButton" Content="Rows" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesRowsButton_Click"/>
+                        <Button x:Name="candidatesColsButton" Content="Columns" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesColsButton_Click"/>
+                        <Button x:Name="candidatesBoxesButton" Content="Boxes" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesBoxesButton_Click"/>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
         </StackPanel>
         <GroupBox>
             <GroupBox.Header>Fill</GroupBox.Header>
