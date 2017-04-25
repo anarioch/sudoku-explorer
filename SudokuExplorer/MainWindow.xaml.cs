@@ -182,6 +182,11 @@ namespace SudokuExplorer
 		{
 			_viewModel.EliminateBoxes();
 		}
+
+		private void CandidatesPairsButton_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.EliminatePairs();
+		}
 		#endregion
 	}
 }

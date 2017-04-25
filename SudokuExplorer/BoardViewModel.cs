@@ -173,8 +173,8 @@ namespace SudokuExplorer
 
 		public void FindCandidates()
 		{
-			BoardCandidates candidates = EliminationSolver.Candidates(Board);
-			RefreshCandidates(candidates);
+			_candidates = EliminationSolver.Candidates(Board);
+			RefreshCandidates(_candidates);
 		}
 
 		private void RefreshCellCandidateVisibility()
@@ -227,6 +227,12 @@ namespace SudokuExplorer
 		public void EliminateBoxes()
 		{
 			EliminationSolver.EliminateBoxes(_candidates);
+			RefreshCandidates(_candidates);
+		}
+
+		public void EliminatePairs()
+		{
+			EliminationSolver.EliminatePairs(_candidates);
 			RefreshCandidates(_candidates);
 		}
 

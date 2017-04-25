@@ -29,19 +29,20 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Button x:Name="solveButton" Content="Solve" Margin="10,10" Grid.Row="1" Width="75" Click="SolveButton_Click"/>
-                        <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,10" Grid.Row="1" Width="75" Click="EliminateButton_Click"/>
-                        <Button x:Name="solesButton" Content="Soles" Margin="10,10" Grid.Row="1" Width="75" Click="SolesButton_Click"/>
+                        <Button x:Name="solveButton" Content="Solve" Margin="10,5" Width="75" Click="SolveButton_Click"/>
+                        <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,5" Width="75" Click="EliminateButton_Click"/>
+                        <Button x:Name="solesButton" Content="Soles" Margin="10,5" Width="75" Click="SolesButton_Click"/>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Candidates">
                     <StackPanel Orientation="Vertical">
                         <CheckBox x:Name="candidatesVisibleCheckBox" Margin="10" IsChecked="{Binding CandidatesActive}">Show Candidates</CheckBox>
-                        <Button x:Name="candidatesButton" Content="Complete" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesButton_Click"/>
-                        <Button x:Name="candidatesBeginButton" Content="Begin" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesBeginButton_Click"/>
-                        <Button x:Name="candidatesRowsButton" Content="Rows" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesRowsButton_Click"/>
-                        <Button x:Name="candidatesColsButton" Content="Columns" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesColsButton_Click"/>
-                        <Button x:Name="candidatesBoxesButton" Content="Boxes" Margin="10,10" Grid.Row="1" Width="75" Click="CandidatesBoxesButton_Click"/>
+                        <Button x:Name="candidatesButton" Content="Complete" Margin="10,5" Width="75" Click="CandidatesButton_Click"/>
+                        <Button x:Name="candidatesBeginButton" Content="Begin" Margin="10,5" Width="75" Click="CandidatesBeginButton_Click"/>
+                        <Button x:Name="candidatesRowsButton" Content="Rows" Margin="10,5" Width="75" Click="CandidatesRowsButton_Click"/>
+                        <Button x:Name="candidatesColsButton" Content="Columns" Margin="10,5" Width="75" Click="CandidatesColsButton_Click"/>
+                        <Button x:Name="candidatesBoxesButton" Content="Boxes" Margin="10,5" Width="75" Click="CandidatesBoxesButton_Click"/>
+                        <Button x:Name="candidatesPairsButton" Content="Pairs" Margin="10,5" Width="75" Click="CandidatesPairsButton_Click"/>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
@@ -49,12 +50,12 @@
         <GroupBox>
             <GroupBox.Header>Fill</GroupBox.Header>
             <StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top" >
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
                     <Button x:Name="clearButton" Content="Clear" Margin="10,10" Width="75" Click="ClearButton_Click"/>
                     <Button x:Name="fillSequentialButton" Content="Sequential" Margin="10,10" Width="75" Click="FillSequentialButton_Click"/>
-                    <Button x:Name="fillStripedButton" Content="Striped" Margin="10,10" Grid.Row="1" Width="75" Click="FillStripedButton_Click"/>
+                    <Button x:Name="fillStripedButton" Content="Striped" Margin="10,10" Width="75" Click="FillStripedButton_Click"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top" >
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
                     <Button x:Name="fillSeedEasyButton" Content="Easy" Margin="10,10" Width="75" Click="FillSeedEasyButton_Click"/>
                     <Button x:Name="fillSeedMediumButton" Content="Medium" Margin="10,10" Width="75" Click="FillSeedMediumButton_Click"/>
                     <Button x:Name="fillSeedHardButton" Content="Hard" Margin="10,10" Width="75" Click="FillSeedHardButton_Click"/>

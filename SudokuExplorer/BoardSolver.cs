@@ -74,6 +74,15 @@ namespace SudokuExplorer
 			return 0;
 		}
 
+		private static List<int> MaskHack(int mask)
+		{
+			List<int> result = new List<int>();
+			for (int i = 1; i < 10; i++)
+				if ((mask & (1 << i)) != 0)
+					result.Add(i);
+			return result;
+		}
+
 		public static BoardCandidates NullCandidates()
 		{
 			return new BoardCandidates();
@@ -126,6 +135,61 @@ namespace SudokuExplorer
 			}
 		}
 
+		// Helper method to count number of nonzero bits in an integer
+		private static int NumberOfSetBits(int i)
+		{
+			i = i - ((i >> 1) & 0x55555555);
+			i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+			return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+		}
+
+		public static void EliminatePairs(BoardCandidates candidates)
+		{
+			EliminatePairsInLine(candidates.cellCandidates, BoardMath.RowColToOrdinal);
+			EliminatePairsInLine(candidates.cellCandidates, BoardMath.ColRowToOrdinal);
+			EliminatePairsInLine(candidates.cellCandidates, BoardMath.BoxToOrdinal);
+		}
+
+		private delegate int LineOrdinalMethod(int outer, int inner);
+
+		private static void EliminatePairsInLine(int[] cellCandidates, LineOrdinalMethod lineOrdinal)
+		{
+			List<int> pairs = new List<int>(9);
+			for (int outer = 0; outer < 9; outer++)
+			{
+				// Find all cells that contain only two candidates
+				pairs.Clear();
+				for (int inner = 0; inner < 9; inner++)
+				{
+					int ordinal = lineOrdinal(outer, inner);
+					int c = cellCandidates[ordinal];
+					if (c != 0) {
+						int numBitsSet = NumberOfSetBits(c);
+						if (numBitsSet == 2)
+							pairs.Add(c);
+					}
+				}
+				// From these, find pairs of cells that contain the same two candidate
+				pairs.Sort();
+				for (int i = 0; i < pairs.Count - 1; i++)
+				{
+					if (pairs[i] == pairs[i+1])
+					{
+						// Unset these bits from all other candidates in the row
+						int pair = pairs[i];
+						int unsetMask = ~pair;
+						for (int inner = 0; inner < 9; inner++)
+						{
+							int ordinal = lineOrdinal(outer, inner);
+							if (cellCandidates[ordinal] != pair)
+								cellCandidates[ordinal] &= unsetMask;
+						}
+						i++;
+					}
+				}
+			}
+		}
+
 		public static BoardCandidates Candidates(SudokuBoard board)
 		{
 			BoardCandidates candidates = new BoardCandidates();
@@ -155,6 +219,8 @@ namespace SudokuExplorer
 					candidates.cellCandidates[ordinal] = intersect;
 				}
 			}
+
+			EliminatePairs(candidates);
 
 			return candidates;
 		}
@@ -194,8 +260,6 @@ namespace SudokuExplorer
 
             return result;
         }
-
-        private delegate int LineOrdinalMethod(int outer, int inner);
 
         private static void FindSolesInLine(int[] lineCandidates, LineOrdinalMethod lineOrdinal, int[] cellCandidates, List<SolveCandidate> result)
         {
