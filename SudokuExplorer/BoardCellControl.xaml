@@ -33,6 +33,17 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsActive}" Value="true">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsSolution}" Value="true">
+                    <Setter Property="Foreground" Value="Green" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -47,15 +58,15 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="candidate1Label" Text="1" Grid.Row="0" Grid.Column="0" Visibility="{Binding IsCandidate_1, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate2Label" Text="2" Grid.Row="0" Grid.Column="1" Visibility="{Binding IsCandidate_2, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate3Label" Text="3" Grid.Row="0" Grid.Column="2" Visibility="{Binding IsCandidate_3, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate4Label" Text="4" Grid.Row="1" Grid.Column="0" Visibility="{Binding IsCandidate_4, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate5Label" Text="5" Grid.Row="1" Grid.Column="1" Visibility="{Binding IsCandidate_5, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate6Label" Text="6" Grid.Row="1" Grid.Column="2" Visibility="{Binding IsCandidate_6, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate7Label" Text="7" Grid.Row="2" Grid.Column="0" Visibility="{Binding IsCandidate_7, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate8Label" Text="8" Grid.Row="2" Grid.Column="1" Visibility="{Binding IsCandidate_8, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
-            <TextBlock x:Name="candidate9Label" Text="9" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsCandidate_9, Converter={StaticResource BoolToVis}}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate1Label" Text="1" Grid.Row="0" Grid.Column="0" DataContext="{Binding Candidates[0]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate2Label" Text="2" Grid.Row="0" Grid.Column="1" DataContext="{Binding Candidates[1]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate3Label" Text="3" Grid.Row="0" Grid.Column="2" DataContext="{Binding Candidates[2]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate4Label" Text="4" Grid.Row="1" Grid.Column="0" DataContext="{Binding Candidates[3]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate5Label" Text="5" Grid.Row="1" Grid.Column="1" DataContext="{Binding Candidates[4]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate6Label" Text="6" Grid.Row="1" Grid.Column="2" DataContext="{Binding Candidates[5]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate7Label" Text="7" Grid.Row="2" Grid.Column="0" DataContext="{Binding Candidates[6]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate8Label" Text="8" Grid.Row="2" Grid.Column="1" DataContext="{Binding Candidates[7]}" Style="{StaticResource CandidateStyle}" />
+            <TextBlock x:Name="candidate9Label" Text="9" Grid.Row="2" Grid.Column="2" DataContext="{Binding Candidates[8]}" Style="{StaticResource CandidateStyle}" />
         </Grid>
         <TextBox x:Name="cell00" Background="Transparent" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource converter}}" Grid.Row="0" Grid.Column="0"/>
     </Grid>
