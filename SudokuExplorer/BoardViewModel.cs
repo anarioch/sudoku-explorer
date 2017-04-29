@@ -128,6 +128,26 @@ namespace SudokuExplorer
 		}
 	}
 
+	public class ElimnationConfiguration : INotifyPropertyChanged
+	{
+		private bool _rows = true;
+		private bool _cols = true;
+		private bool _boxes = true;
+		private bool _pairs = true;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public bool Rows  { get { return _rows;  } set { _rows  = value; NotifyPropertyChanged(); } }
+		public bool Cols  { get { return _cols;  } set { _cols  = value; NotifyPropertyChanged(); } }
+		public bool Boxes { get { return _boxes; } set { _boxes = value; NotifyPropertyChanged(); } }
+		public bool Pairs { get { return _pairs; } set { _pairs = value; NotifyPropertyChanged(); } }
+
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+
 	public class BoardViewModel : INotifyPropertyChanged
 	{
 		private BoardCell[] _data = new BoardCell[9 * 9];
@@ -135,6 +155,7 @@ namespace SudokuExplorer
 		private IBoardValidator _validator;
 
 		private bool _candidatesActive;
+		private readonly ElimnationConfiguration _eliminationConfig = new ElimnationConfiguration();
 
 		private BoardCandidates _candidates;
 
@@ -144,6 +165,8 @@ namespace SudokuExplorer
 		{
 			for (int index = 0; index < 81; index++)
 				_data[index] = new BoardCell(this, index);
+
+			_eliminationConfig.PropertyChanged += OnEliminationConfigChanged;
 		}
 
 		public int Value(int index)
@@ -173,6 +196,8 @@ namespace SudokuExplorer
 				if (_board != null)
 					_board.BoardChanged += OnBoardChanged;
 				NotifyPropertyChanged();
+
+				FindCandidates();
 			}
 		}
 
@@ -206,9 +231,17 @@ namespace SudokuExplorer
 			set { _candidatesActive = value; NotifyPropertyChanged(); RefreshCellCandidateVisibility(); }
 		}
 
-		public void FindCandidates()
+		public ElimnationConfiguration ElimnationConfiguration
 		{
-			_candidates = EliminationSolver.Candidates(Board);
+			get { return _eliminationConfig; }
+		}
+
+		private void FindCandidates()
+		{
+			_candidates = EliminationSolver.EmptyCandidates(Board);
+			EliminationSolver.EliminateSimple(_candidates, _eliminationConfig.Rows, _eliminationConfig.Cols, _eliminationConfig.Boxes);
+			if (_eliminationConfig.Pairs)
+				EliminationSolver.EliminatePairs(_candidates);
 			RefreshCandidates(_candidates);
 		}
 
@@ -240,51 +273,23 @@ namespace SudokuExplorer
 			}
 		}
 
-		public void ClearCandidates()
-		{
-			RefreshCandidates(EliminationSolver.NullCandidates());
-		}
-
-		public void SetEmptyCandidates()
-		{
-			_candidates = EliminationSolver.EmptyCandidates(Board);
-			RefreshCandidates(_candidates);
-		}
-
-		public void EliminateRows()
-		{
-			EliminationSolver.EliminateRows(_candidates);
-			RefreshCandidates(_candidates);
-		}
-
-		public void EliminateCols()
-		{
-			EliminationSolver.EliminateCols(_candidates);
-			RefreshCandidates(_candidates);
-		}
-
-		public void EliminateBoxes()
-		{
-			EliminationSolver.EliminateBoxes(_candidates);
-			RefreshCandidates(_candidates);
-		}
-
-		public void EliminatePairs()
-		{
-			EliminationSolver.EliminatePairs(_candidates);
-			RefreshCandidates(_candidates);
-		}
-
 		private void OnBoardChanged(SudokuBoard sender)
 		{
 			for (int index = 0; index < 81; index++)
 				_data[index].OnBoardChanged();
+
+			FindCandidates();
 		}
 
 		private void OnValidatorChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "IsValid")
 				NotifyPropertyChanged("Validity");
+		}
+
+		private void OnEliminationConfigChanged(object sender, PropertyChangedEventArgs e)
+		{
+			FindCandidates();
 		}
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

@@ -108,30 +108,25 @@ namespace SudokuExplorer
 			return candidates;
 		}
 
-		public static void EliminateRows(BoardCandidates candidates)
+		public static void EliminateSimple(BoardCandidates candidates, bool rows, bool cols, bool boxes)
 		{
 			for (int i = 0; i < 81; i++)
 			{
-				int row = BoardMath.OrdinalToRow(i);
-				candidates.cellCandidates[i] &= candidates.rowCandidates[row];
-			}
-		}
-
-		public static void EliminateCols(BoardCandidates candidates)
-		{
-			for (int i = 0; i < 81; i++)
-			{
-				int col = BoardMath.OrdinalToCol(i);
-				candidates.cellCandidates[i] &= candidates.colCandidates[col];
-			}
-		}
-
-		public static void EliminateBoxes(BoardCandidates candidates)
-		{
-			for (int i = 0; i < 81; i++)
-			{
-				int box = BoardMath.OrdinalToBox(i);
-				candidates.cellCandidates[i] &= candidates.boxCandidates[box];
+				if (rows)
+				{
+					int row = BoardMath.OrdinalToRow(i);
+					candidates.cellCandidates[i] &= candidates.rowCandidates[row];
+				}
+				if (cols)
+				{
+					int col = BoardMath.OrdinalToCol(i);
+					candidates.cellCandidates[i] &= candidates.colCandidates[col];
+				}
+				if (boxes)
+				{
+					int box = BoardMath.OrdinalToBox(i);
+					candidates.cellCandidates[i] &= candidates.boxCandidates[box];
+				}
 			}
 		}
 

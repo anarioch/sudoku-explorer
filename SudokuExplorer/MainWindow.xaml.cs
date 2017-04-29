@@ -53,13 +53,11 @@ namespace SudokuExplorer
 		private void FillSequentialButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillSequential(Board);
-			_viewModel.ClearCandidates();
 		}
 
 		private void FillStripedButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillStriped(Board);
-			_viewModel.ClearCandidates();
 		}
 
 		private int _fillSeed = 0;
@@ -67,31 +65,26 @@ namespace SudokuExplorer
 		private void FillSeedEasyButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillSeed(Board, 0, _fillSeed++);
-			_viewModel.ClearCandidates();
 		}
 
 		private void FillSeedMediumButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillSeed(Board, 1, _fillSeed++);
-			_viewModel.ClearCandidates();
 		}
 
 		private void FillSeedHardButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillSeed(Board, 2, _fillSeed++);
-			_viewModel.ClearCandidates();
 		}
 
 		private void FillSeedEvilButton_Click(object sender, RoutedEventArgs e)
 		{
 			BoardFactory.FillSeed(Board, 3, _fillSeed++);
-			_viewModel.ClearCandidates();
 		}
 
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
 		{
 			Board.Clear();
-			_viewModel.ClearCandidates();
 		}
 
 		private void EliminateButton_Click(object sender, RoutedEventArgs e)
@@ -155,37 +148,6 @@ namespace SudokuExplorer
 			Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Ran {0} iterations in {1}ms", iterations, stopwatch.ElapsedMilliseconds);
-		}
-
-		private void CandidatesButton_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.FindCandidates();
-		}
-
-		private void CandidatesBeginButton_Click(object sender, RoutedEventArgs e)
-		{
-			// TODO: Make the Solver stateful, so that this code steps it and the ViewModel notices
-			_viewModel.SetEmptyCandidates();
-		}
-
-		private void CandidatesRowsButton_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.EliminateRows();
-		}
-
-		private void CandidatesColsButton_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.EliminateCols();
-		}
-
-		private void CandidatesBoxesButton_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.EliminateBoxes();
-		}
-
-		private void CandidatesPairsButton_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.EliminatePairs();
 		}
 		#endregion
 	}

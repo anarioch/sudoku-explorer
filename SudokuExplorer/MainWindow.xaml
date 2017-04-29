@@ -37,12 +37,12 @@
                 <GroupBox Header="Candidates">
                     <StackPanel Orientation="Vertical">
                         <CheckBox x:Name="candidatesVisibleCheckBox" Margin="10" IsChecked="{Binding CandidatesActive}">Show Candidates</CheckBox>
-                        <Button x:Name="candidatesButton" Content="Complete" Margin="10,5" Width="75" Click="CandidatesButton_Click"/>
-                        <Button x:Name="candidatesBeginButton" Content="Begin" Margin="10,5" Width="75" Click="CandidatesBeginButton_Click"/>
-                        <Button x:Name="candidatesRowsButton" Content="Rows" Margin="10,5" Width="75" Click="CandidatesRowsButton_Click"/>
-                        <Button x:Name="candidatesColsButton" Content="Columns" Margin="10,5" Width="75" Click="CandidatesColsButton_Click"/>
-                        <Button x:Name="candidatesBoxesButton" Content="Boxes" Margin="10,5" Width="75" Click="CandidatesBoxesButton_Click"/>
-                        <Button x:Name="candidatesPairsButton" Content="Pairs" Margin="10,5" Width="75" Click="CandidatesPairsButton_Click"/>
+                        <StackPanel Orientation="Vertical" IsEnabled="{Binding IsChecked, ElementName=candidatesVisibleCheckBox}">
+                            <CheckBox x:Name="candidatesRowsCheckBox" Margin="10,5"  IsChecked="{Binding ElimnationConfiguration.Rows}" >Eliminate Rows</CheckBox>
+                            <CheckBox x:Name="candidatesColsCheckBox" Margin="10,5"  IsChecked="{Binding ElimnationConfiguration.Cols}" >Eliminate Cols</CheckBox>
+                            <CheckBox x:Name="candidatesBoxesCheckBox" Margin="10,5" IsChecked="{Binding ElimnationConfiguration.Boxes}">Eliminate Boxes</CheckBox>
+                            <CheckBox x:Name="candidatesPairsCheckBox" Margin="10,10" IsChecked="{Binding ElimnationConfiguration.Pairs}">Eliminate Pairs</CheckBox>
+                        </StackPanel>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
