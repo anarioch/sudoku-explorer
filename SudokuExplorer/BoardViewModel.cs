@@ -128,36 +128,22 @@ namespace SudokuExplorer
 		}
 	}
 
-	public class ElimnationConfiguration : INotifyPropertyChanged
-	{
-		private bool _rows = true;
-		private bool _cols = true;
-		private bool _boxes = true;
-		private bool _pairs = true;
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public bool Rows  { get { return _rows;  } set { _rows  = value; NotifyPropertyChanged(); } }
-		public bool Cols  { get { return _cols;  } set { _cols  = value; NotifyPropertyChanged(); } }
-		public bool Boxes { get { return _boxes; } set { _boxes = value; NotifyPropertyChanged(); } }
-		public bool Pairs { get { return _pairs; } set { _pairs = value; NotifyPropertyChanged(); } }
-
-		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-
+	/// <summary>
+	/// The View Model for our Sudoku Explorer.  Combines the cell values from the Board,
+	/// the validation status from the Validator and the set of candidates from the Candidates
+	/// into a structure of properties suitable for binding to XAML.
+	/// </summary>
 	public class BoardViewModel : INotifyPropertyChanged
 	{
+		// View Model fields
 		private BoardCell[] _data = new BoardCell[9 * 9];
+
+		// Model fields
 		private SudokuBoard _board;
 		private IBoardValidator _validator;
+		private IEliminationSolver _solver;
 
 		private bool _candidatesActive;
-		private readonly ElimnationConfiguration _eliminationConfig = new ElimnationConfiguration();
-
-		private BoardCandidates _candidates;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -165,8 +151,6 @@ namespace SudokuExplorer
 		{
 			for (int index = 0; index < 81; index++)
 				_data[index] = new BoardCell(this, index);
-
-			_eliminationConfig.PropertyChanged += OnEliminationConfigChanged;
 		}
 
 		public int Value(int index)
@@ -196,8 +180,6 @@ namespace SudokuExplorer
 				if (_board != null)
 					_board.BoardChanged += OnBoardChanged;
 				NotifyPropertyChanged();
-
-				FindCandidates();
 			}
 		}
 
@@ -215,6 +197,20 @@ namespace SudokuExplorer
 			}
 		}
 
+		public IEliminationSolver Solver
+		{
+			get => _solver;
+			set
+			{
+				if (_solver != null)
+					_solver.CandidatesChanged -= OnSolverChanged;
+				_solver = value;
+				if (_solver != null)
+					_solver.CandidatesChanged += OnSolverChanged;
+				NotifyPropertyChanged();
+			}
+		}
+
 		public Validity Validity
 		{
 			get { return _validator != null ? _validator.IsValid : Validity.INVALID; }
@@ -227,22 +223,14 @@ namespace SudokuExplorer
 
 		public bool CandidatesActive
 		{
-			get { return _candidatesActive; }
+			get => _candidatesActive;
 			set { _candidatesActive = value; NotifyPropertyChanged(); RefreshCellCandidateVisibility(); }
 		}
 
+		// This is a shorthand property that passes through to the config on the solver
 		public ElimnationConfiguration ElimnationConfiguration
 		{
-			get { return _eliminationConfig; }
-		}
-
-		private void FindCandidates()
-		{
-			_candidates = EliminationSolver.EmptyCandidates(Board);
-			EliminationSolver.EliminateSimple(_candidates, _eliminationConfig.Rows, _eliminationConfig.Cols, _eliminationConfig.Boxes);
-			if (_eliminationConfig.Pairs)
-				EliminationSolver.EliminatePairs(_candidates);
-			RefreshCandidates(_candidates);
+			get => _solver == null ? null : _solver.Configuration;
 		}
 
 		private void RefreshCellCandidateVisibility()
@@ -251,12 +239,13 @@ namespace SudokuExplorer
 				cell.AreCandidatesVisible = _candidatesActive;
 		}
 
-		private void RefreshCandidates(BoardCandidates candidates)
+		private void RefreshCandidates()
 		{
+			int[] cellCandidates = _solver.CellCandidates;
 			for (int i = 0; i < 81; i++)
 			{
 				BoardCell cell = _data[i];
-				int c = candidates.cellCandidates[i];
+				int c = cellCandidates[i];
 				for (int j = 1; j < 10; j++)
 				{
 					cell.Candidates[j - 1].IsActive = (c & (1 << j)) != 0;
@@ -264,10 +253,8 @@ namespace SudokuExplorer
 				}
 			}
 
-			// TODO: Perhaps this should be bound to the UI?
 			// TODO: Stash the reason also to display upon focus
-			var solutions = EliminationSolver.Solve(candidates, true, true);
-			foreach (var solution in solutions)
+			foreach (var solution in _solver.Solutions)
 			{
 				_data[solution.Ordinal].Candidates[solution.Candidate - 1].IsSolution = true;
 			}
@@ -277,8 +264,6 @@ namespace SudokuExplorer
 		{
 			for (int index = 0; index < 81; index++)
 				_data[index].OnBoardChanged();
-
-			FindCandidates();
 		}
 
 		private void OnValidatorChanged(object sender, PropertyChangedEventArgs e)
@@ -287,9 +272,9 @@ namespace SudokuExplorer
 				NotifyPropertyChanged("Validity");
 		}
 
-		private void OnEliminationConfigChanged(object sender, PropertyChangedEventArgs e)
+		private void OnSolverChanged()
 		{
-			FindCandidates();
+			RefreshCandidates();
 		}
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

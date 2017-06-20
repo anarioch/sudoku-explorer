@@ -32,6 +32,7 @@ namespace SudokuExplorer
 			Board = new SudokuBoard();
 			InitializeComponent();
 			_viewModel.Validator = _validator;
+			_viewModel.Solver = new EliminationSolver() { Board = _board };
 			boardControl.ViewModel = _viewModel;
 			DataContext = _viewModel;
 		}
@@ -89,10 +90,12 @@ namespace SudokuExplorer
 
 		private void EliminateButton_Click(object sender, RoutedEventArgs e)
 		{
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
-			IEnumerable<SolveCandidate> candidates = EliminationSolver.Solve(Board, true, false);
-			stopwatch.Stop();
+			//Stopwatch stopwatch = new Stopwatch();
+			//stopwatch.Start();
+			//IEnumerable<SolveCandidate> candidates = SolverUtils.Solve(Board, true, false);
+			//stopwatch.Stop();
+
+			IEnumerable<SolveCandidate> candidates = _viewModel.Solver.Solutions;
 
 			// Apply the solutions (pausing UI updates until the end)
 			Board.SuppressChangeEvents();
@@ -100,29 +103,29 @@ namespace SudokuExplorer
 				Board[candidate.Ordinal] = candidate.Candidate;
 			Board.ResumeChangeEvents();
 
-			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
+			//statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
 
 		private void SolesButton_Click(object sender, RoutedEventArgs e)
 		{
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
-			IEnumerable<SolveCandidate> candidates = EliminationSolver.Solve(Board, false, true);
-			stopwatch.Stop();
+			//Stopwatch stopwatch = new Stopwatch();
+			//stopwatch.Start();
+			//IEnumerable<SolveCandidate> candidates = SolverUtils.Solve(Board, false, true);
+			//stopwatch.Stop();
 
-			// Apply the solutions (pausing UI updates until the end)
-			Board.SuppressChangeEvents();
-			foreach (SolveCandidate candidate in candidates)
-				Board[candidate.Ordinal] = candidate.Candidate;
-			Board.ResumeChangeEvents();
+			//// Apply the solutions (pausing UI updates until the end)
+			//Board.SuppressChangeEvents();
+			//foreach (SolveCandidate candidate in candidates)
+			//	Board[candidate.Ordinal] = candidate.Candidate;
+			//Board.ResumeChangeEvents();
 
-			statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
+			//statusText.Text = String.Format("Found {0} entries in {1}ms", candidates.Count(), stopwatch.ElapsedMilliseconds);
 		}
 
 		private void SolveButton_Click(object sender, RoutedEventArgs e)
 		{
 			// We do not need the UI to keep updating while doing the solve
-			Board.SuppressChangeEvents();
+			//Board.SuppressChangeEvents();
 
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
@@ -131,7 +134,7 @@ namespace SudokuExplorer
 			do
 			{
 				// Try looking for candidates
-				List<SolveCandidate> candidates = EliminationSolver.Solve(Board, true, true);
+				List<SolveCandidate> candidates = _viewModel.Solver.Solutions;
 				foundCandidates = false;
 				foreach (SolveCandidate candidate in candidates)
 				{
@@ -145,7 +148,7 @@ namespace SudokuExplorer
 			} while (foundCandidates);
 			stopwatch.Stop();
 
-			Board.ResumeChangeEvents();
+			//Board.ResumeChangeEvents();
 
 			statusText.Text = String.Format("Ran {0} iterations in {1}ms", iterations, stopwatch.ElapsedMilliseconds);
 		}

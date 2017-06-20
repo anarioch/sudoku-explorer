@@ -31,7 +31,7 @@
                         </TextBlock>
                         <Button x:Name="solveButton" Content="Solve" Margin="10,5" Width="75" Click="SolveButton_Click"/>
                         <Button x:Name="eliminateButton" Content="Eliminate" Margin="10,5" Width="75" Click="EliminateButton_Click"/>
-                        <Button x:Name="solesButton" Content="Soles" Margin="10,5" Width="75" Click="SolesButton_Click"/>
+                        <Button x:Name="solesButton" Content="Soles" Margin="10,5" Width="75" Click="SolesButton_Click" IsEnabled="False"/>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Candidates">
