@@ -28,6 +28,7 @@ namespace SudokuExplorer
 		private bool _cols = true;
 		private bool _boxes = true;
 		private bool _pairs = true;
+		private bool _spades = true;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,6 +36,7 @@ namespace SudokuExplorer
 		public bool Cols { get { return _cols; } set { _cols = value; NotifyPropertyChanged(); } }
 		public bool Boxes { get { return _boxes; } set { _boxes = value; NotifyPropertyChanged(); } }
 		public bool Pairs { get { return _pairs; } set { _pairs = value; NotifyPropertyChanged(); } }
+		public bool Spades { get { return _spades; } set { _spades = value; NotifyPropertyChanged(); } }
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
@@ -138,12 +140,17 @@ namespace SudokuExplorer
 					_cellCandidates[i] &= _boxes[box];
 			}
 
+			// TODO: These last two could perhaps be run in a loop around each other, until neither find any eliminations
+
 			if (_configuration.Pairs)
 			{
 				EliminatePairsInLine(_cellCandidates, BoardMath.RowColToOrdinal);
 				EliminatePairsInLine(_cellCandidates, BoardMath.ColRowToOrdinal);
 				EliminatePairsInLine(_cellCandidates, BoardMath.BoxToOrdinal);
 			}
+
+			if (_configuration.Spades)
+				EliminateSpades(_cellCandidates);
 
 			// Regenerate solutions
 			Solutions = Solve(true, true);
@@ -220,6 +227,95 @@ namespace SudokuExplorer
 					}
 				}
 			}
+		}
+
+		// If a digit appears only within a single row of a box, then eliminate it from the entire row
+		private static void EliminateSpades(int[] cellCandidates)
+		{
+			// TODO: This could be extended to digits that appear only in a single box within a row
+
+			// foreach box
+			//    foreach row
+			//        candidates = union (candidates in row)
+			//        candidates &= ~(union of candidates from other rows)
+			//        if (candidates != 0)
+			//            eliminate these candidates from remainder of whole row
+			bool foundSomething;
+			do
+			{
+				foundSomething = false;
+				for (int box = 0; box < 9; box++)
+				{
+					// First find the set of candidates available in each row and column
+					int[] candidatesInRow = new int[3];
+					int[] candidatesInCol = new int[3];
+					for (int i = 0; i < 3; i++)
+					{
+						for (int j = 0; j < 3; j++)
+						{
+							candidatesInRow[i] |= cellCandidates[BoardMath.BoxToOrdinal(box, i, j)];
+							candidatesInCol[i] |= cellCandidates[BoardMath.BoxToOrdinal(box, j, i)];
+						}
+					}
+					// Then use these to find the candidates _only_ in each row and column
+					int[] candidatesOnlyInRow = new int[3];
+					int[] candidatesOnlyInCol = new int[3];
+					candidatesOnlyInRow[0] =  candidatesInRow[0] & ~candidatesInRow[1] & ~candidatesInRow[2];
+					candidatesOnlyInRow[1] = ~candidatesInRow[0] &  candidatesInRow[1] & ~candidatesInRow[2];
+					candidatesOnlyInRow[2] = ~candidatesInRow[0] & ~candidatesInRow[1] &  candidatesInRow[2];
+					candidatesOnlyInCol[0] =  candidatesInCol[0] & ~candidatesInCol[1] & ~candidatesInCol[2];
+					candidatesOnlyInCol[1] = ~candidatesInCol[0] &  candidatesInCol[1] & ~candidatesInCol[2];
+					candidatesOnlyInCol[2] = ~candidatesInCol[0] & ~candidatesInCol[1] &  candidatesInCol[2];
+					for (int outer = 0; outer < 3; outer++)
+					{
+						// Yay we found one!  Eliminate this from the entire row
+						int eliminationRow = candidatesOnlyInRow[outer];
+						if (eliminationRow != 0)
+						{
+							int ordinalInBox = BoardMath.BoxToOrdinal(box, 3 * outer);
+							int realRow = BoardMath.OrdinalToRow(ordinalInBox);
+							for (int i = 0; i < 9; i++) // Iterate along the row
+							{
+								// Skip the box we found candidates in
+								int innerBox = BoardMath.RowColToBox(realRow, i);
+								if (box == innerBox)
+									continue;
+
+								// Eliminate the candidates, and note that we did something
+								int ordinal = BoardMath.RowColToOrdinal(realRow, i);
+								if ((cellCandidates[ordinal] & eliminationRow) != 0)
+								{
+									cellCandidates[ordinal] &= ~eliminationRow;
+									foundSomething = true;
+								}
+							}
+						}
+
+						// Yay we found one!  Eliminate this from the entire column
+						int eliminationCol = candidatesOnlyInCol[outer];
+						if (eliminationCol != 0)
+						{
+							int ordinalInBox = BoardMath.BoxToOrdinal(box, outer);
+							int realCol = BoardMath.OrdinalToCol(ordinalInBox);
+							for (int i = 0; i < 9; i++) // Iterate down the column
+							{
+								// Skip the box we found candidates in
+								int innerBox = BoardMath.RowColToBox(i, realCol);
+								if (box == innerBox)
+									continue;
+
+								// Eliminate the candidates, and note that we did something
+								int ordinal = BoardMath.RowColToOrdinal(i, realCol);
+								if ((cellCandidates[ordinal] & eliminationCol) != 0)
+								{
+									cellCandidates[ordinal] &= ~eliminationCol;
+									foundSomething = true;
+								}
+							}
+						}
+					}
+				}
+			} while (foundSomething);
 		}
 
 		private static int MissingEntries(IBoardLine line)

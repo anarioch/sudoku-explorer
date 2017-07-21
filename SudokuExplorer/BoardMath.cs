@@ -44,6 +44,11 @@
 
 		public static int BoxToOrdinal(int box, int index)
 		{
+			return BoxToOrdinal(box, index / 3, index % 3);
+		}
+
+		public static int BoxToOrdinal(int box, int rowInBox, int colInBox)
+		{
 			// Initial indices of each box
 			//    0   3   6
 			//    27  30  33
@@ -54,7 +59,7 @@
 			// 9   10  11
 			// 18  19  20
 
-			int boxOffset = (index / 3) * 9 + (index % 3);
+			int boxOffset = rowInBox * 9 + colInBox;
 
 			return boxStart + boxOffset;
 		}
