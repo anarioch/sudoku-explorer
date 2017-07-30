@@ -42,7 +42,7 @@
                             <CheckBox x:Name="candidatesColsCheckBox" Margin="10,5"  IsChecked="{Binding ElimnationConfiguration.Cols}" >Eliminate Cols</CheckBox>
                             <CheckBox x:Name="candidatesBoxesCheckBox" Margin="10,5" IsChecked="{Binding ElimnationConfiguration.Boxes}">Eliminate Boxes</CheckBox>
                             <CheckBox x:Name="candidatesPairsCheckBox" Margin="10,10" IsChecked="{Binding ElimnationConfiguration.Pairs}">Eliminate Pairs</CheckBox>
-                            <CheckBox x:Name="candidatesStuffCheckBox" Margin="10,10" IsChecked="{Binding ElimnationConfiguration.Stuff}">Eliminate Stuff</CheckBox>
+                            <CheckBox x:Name="candidatesStuffCheckBox" Margin="10,10" IsChecked="{Binding ElimnationConfiguration.Spades}">Eliminate Spades</CheckBox>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
