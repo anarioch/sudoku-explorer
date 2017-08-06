@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BoardMathTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SudokuExplorer\SudokuExplorer.csproj">

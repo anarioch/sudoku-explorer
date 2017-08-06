@@ -63,5 +63,20 @@
 
 			return boxStart + boxOffset;
 		}
+
+		public static string CandidateMaskToString(int mask)
+		{
+			string result = "";
+			for (int i = 1; i < 10; i++)
+			{
+				if ((mask & (1 << i)) != 0)
+					result += "|" + i;
+			}
+
+			if (result.Length == 0)
+				return "<None>";
+
+			return result.Substring(1);
+		}
 	}
 }
