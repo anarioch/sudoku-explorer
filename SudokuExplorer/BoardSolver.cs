@@ -38,6 +38,8 @@ namespace SudokuExplorer
 		public bool Pairs { get { return _pairs; } set { _pairs = value; NotifyPropertyChanged(); } }
 		public bool Spades { get { return _spades; } set { _spades = value; NotifyPropertyChanged(); } }
 
+		public bool BasicEliminationsActive { get { return _rows && _cols && _boxes; } }
+
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -140,17 +142,21 @@ namespace SudokuExplorer
 					_cellCandidates[i] &= _boxes[box];
 			}
 
-			// TODO: These last two could perhaps be run in a loop around each other, until neither find any eliminations
-
-			if (_configuration.Pairs)
+			// Further elimination assumes that all row/col/box elimination is done
+			if (_configuration.BasicEliminationsActive)
 			{
-				EliminatePairsInLine(_cellCandidates, BoardMath.RowColToOrdinal);
-				EliminatePairsInLine(_cellCandidates, BoardMath.ColRowToOrdinal);
-				EliminatePairsInLine(_cellCandidates, BoardMath.BoxToOrdinal);
-			}
+				// TODO: These last two could perhaps be run in a loop around each other, until neither find any eliminations
 
-			if (_configuration.Spades)
-				EliminateSpades(_cellCandidates);
+				if (_configuration.Pairs)
+				{
+					EliminatePairsInLine(_cellCandidates, BoardMath.RowColToOrdinal);
+					EliminatePairsInLine(_cellCandidates, BoardMath.ColRowToOrdinal);
+					EliminatePairsInLine(_cellCandidates, BoardMath.BoxToOrdinal);
+				}
+
+				if (_configuration.Spades)
+					EliminateSpades(_cellCandidates);
+			}
 
 			// Regenerate solutions
 			Solutions = Solve(true, true);
