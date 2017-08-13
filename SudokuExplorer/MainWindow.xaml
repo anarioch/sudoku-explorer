@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SudokuExplorer"
         mc:Ignorable="d"
-        Title="Sudoku Explorer" Height="580" Width="560"
+        Title="Sudoku Explorer" Height="620" Width="600"
         x:Name="me">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
